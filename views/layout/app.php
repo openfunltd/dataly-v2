@@ -70,6 +70,7 @@
             <!-- Main Content -->
             <div id="content">
 
+                <?php /*
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -122,6 +123,7 @@
 
                 </nav>
                 <!-- End of Topbar -->
+                */ ?>
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">

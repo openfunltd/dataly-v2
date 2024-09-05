@@ -1,4 +1,8 @@
+<?php
+$config = TypeHelper::getTypeConfig()[$this->type];
+?>
 <?php $this->yield_start('content') ?>
+<h1><?= $this->escape($config['name'] . ' / ' . $this->type) ?></h1>
 <div class="row">
     <div class="col-md-3">
         <div class="card shadow mb-4">
