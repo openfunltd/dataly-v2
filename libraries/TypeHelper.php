@@ -6,6 +6,8 @@ class TypeHelper
     {
         return [
             'meet' => [
+                'name' => '會議',
+                'icon' => 'fas fa-fw fa-calendar-day',
                 'cols' => [
                     '會議代碼',
                     '日期',
@@ -19,6 +21,8 @@ class TypeHelper
                 ],
             ],
             'bill' => [
+                'name' => '議案',
+                'icon' => 'fas fa-fw fa-file-alt',
                 'cols' => [
                     '議案編號',
                     '提案來源',
@@ -35,6 +39,8 @@ class TypeHelper
                 ],
             ],
             'legislator' => [
+                'name' => '立委',
+                'icon' => 'fas fa-fw fa-user-tie',
                 'cols' => [
                     '屆期',
                     '委員姓名',
@@ -47,7 +53,21 @@ class TypeHelper
                     '黨籍',
                 ],
             ],
+            'committee' => [
+                'name' => '委員會',
+                'icon' => 'fas fa-fw fa-users',
+                'cols' => [
+                    '委員會代號',
+                    '委員會名稱',
+                    '委員會類別',
+                ],
+                'default_aggs' => [
+                    '委員會類別',
+                ],
+            ],
             'ivod' => [
+                'name' => 'iVOD',
+                'icon' => 'fas fa-fw fa-video',
                 'cols' => [
                     'IVOD_ID',
                     '日期',
@@ -60,7 +80,23 @@ class TypeHelper
                     '影片種類',
                 ],
             ],
+            'law' => [
+                'name' => '法律',
+                'icon' => 'fas fa-fw fa-balance-scale',
+                'cols' => [
+                    '法律編號',
+                    '類別',
+                    '母法編號',
+                    '名稱',
+                    '其他名稱',
+                ],
+                'default_aggs' => [
+                    '類別',
+                ],
+            ],
             'gazette' => [
+                'name' => '公報',
+                'icon' => 'fas fa-fw fa-newspaper',
                 'cols' => [
                     '公報編號',
                     '卷',
@@ -70,6 +106,36 @@ class TypeHelper
                 ],
                 'default_aggs' => [
                     '卷',
+                ],
+            ],
+            'gazette_agenda' => [
+                'name' => '公報章節',
+                'icon' => 'fas fa-fw fa-newspaper',
+                'cols' => [
+                    '公報議程編號',
+                    '卷',
+                    '期',
+                    '冊別',
+                    '會議日期',
+                    '案由',
+                ],
+                'default_aggs' => [
+                    '卷',
+                ],
+            ],
+            'interpellation' => [
+                'name' => '書面質詢',
+                'icon' => 'fas fa-fw fa-question',
+                'cols' => [
+                    '質詢編號',
+                    '屆',
+                    '質詢委員',
+                    '刊登日期',
+                    '事由',
+                ],
+                'default_aggs' => [
+                    '屆',
+                    '質詢委員',
                 ],
             ],
         ];
@@ -83,6 +149,7 @@ class TypeHelper
 
     public static function getData($data, $type)
     {
+        $type = str_replace('_', '', $type);
         return $data->{$type . 's'} ?? [];
     }
 

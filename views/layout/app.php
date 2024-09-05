@@ -1,12 +1,3 @@
-<?php
-$items = [
-    'meet' => ['會議', 'fas fa-fw fa-calendar-day'],
-    'bill' => ['提案', 'fas fa-fw fa-file-alt'],
-    'legislator' => ['立委', 'fas fa-fw fa-users'],
-    'ivod' => ['iVOD', 'fas fa-fw fa-video'],
-    'gazette' => ['公報', 'fas fa-fw fa-newspaper'],
-];
-?>
 <!DOCTYPE html>
 <html lang="zh-tw">
 <head>
@@ -56,11 +47,11 @@ $items = [
             <div class="sidebar-heading">
                 Data
             </div>
-            <?php foreach ($items as $key => $item) { ?>
+            <?php foreach (TypeHelper::getTypeConfig() as $key => $config) { ?>
                 <li class="nav-item <?= $this->if($this->type== $key, 'active') ?>">
                     <a class="nav-link" href="/collection/table/<?= $key ?>">
-                        <i class="<?= $this->escape($item[1]) ?>"></i>
-                        <span><?= $this->escape($item[0]) ?> / <?= $this->escape($key) ?></span></a>
+                        <i class="<?= $this->escape($config['icon']) ?>"></i>
+                        <span><?= $this->escape($config['name']) ?> / <?= $this->escape($key) ?></span></a>
                 </li>
             <?php } ?>
             <!-- Divider -->
