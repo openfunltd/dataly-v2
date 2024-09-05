@@ -176,6 +176,7 @@ class MiniEngine_Controller_NotFound extends Exception
 class MiniEngine_Controller_ViewObject
 {
     protected $_data = [];
+    protected $_yield = [];
 
     public function __set($name, $value)
     {
@@ -190,6 +191,35 @@ class MiniEngine_Controller_ViewObject
     public function __isset($name)
     {
         return isset($this->_data[$name]);
+    }
+
+    protected $_current_yield = null;
+    public function yield_start($name)
+    {
+        ob_start();
+        $this->_yield[$name] = '';
+        $this->_current_yield = $name;
+    }
+
+    public function yield_end()
+    {
+        $name = $this->_current_yield;
+        $this->_yield[$name] = ob_get_clean();
+    }
+
+    public function yield_set($name, $value)
+    {
+        $this->_yield[$name] = $value;
+    }
+
+    public function yield($name)
+    {
+        return $this->_yield[$name] ?? '';
+    }
+
+    public function if($condition, $true, $false = '')
+    {
+        return $condition ? $true : $false;
     }
 
     public function partial($file, $data = null)
