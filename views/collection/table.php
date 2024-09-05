@@ -63,8 +63,6 @@ $(document).ready(function() {
     $('#dataTable').DataTable({
         serverSide: true,
         ajax: function(data, callback, settings){
-            console.log(settings);
-            console.log(data);
             var api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
             api_url += '?limit=' + data.length;
             api_url += '&page=' + (data.start / data.length + 1);
