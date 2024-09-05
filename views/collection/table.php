@@ -27,9 +27,6 @@ $config = TypeHelper::getTypeConfig()[$this->type];
 </div>
 </script>
 
-                    <?php foreach ($this->data->aggs as $agg_data) { ?>
-                    <?php $agg = $agg_data->agg; ?>
-                    <?php } ?>
                 </div>
             </div>
         </div>
