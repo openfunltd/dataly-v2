@@ -147,16 +147,31 @@ class TypeHelper
         return $config[$type]['cols'] ?? [];
     }
 
-    public static function getData($data, $type)
+    public static function getDataColumn($type)
     {
         $type = str_replace('_', '', $type);
-        return $data->{$type . 's'} ?? [];
+        return $type . 's';
+    }
+
+    public static function getData($data, $type)
+    {
+        return $data->{self::getDataColumn($type)} ?? [];
+    }
+
+    public static function getAPIURL($type)
+    {
+        if (getenv('LYAPI_HOST')) {
+            $url = 'https://' . getenv('LYAPI_HOST') . $url;
+        } else {
+            $url = 'https://v2.ly.govapi.tw' . $url;
+        }
+        return "{$url}/{$type}s";
     }
 
     public static function getDataFromAPI($type)
     {
         $agg = self::getCurrentAgg($type);
-        $url = "/{$type}s";
+        $url = self::getAPIURL($type);
         $terms = [];
         foreach ($agg as $field) {
             $terms[] = "agg=" . urlencode($field);
