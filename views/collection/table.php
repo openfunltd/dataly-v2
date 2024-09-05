@@ -12,9 +12,22 @@
                     </button>
                     <div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownFilter">
                         <?php foreach ($this->data->supported_filter_fields as $field) { ?>
-                        <a class="dropdown-item" href="#"><?= $this->escape($field) ?></a>
+                        <a class="dropdown-item toggle-filter" data-field="<?= $this->escape($field) ?>" href="#"><?= $this->escape($field) ?></a>
                         <?php } ?>
                     </div>
+                    <?php foreach ($this->data->aggs as $agg_data) { ?>
+                    <?php $agg = $agg_data->agg; ?>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary"><?= $this->escape($agg) ?></h6>
+                        </div>
+                        <div class="card-body">
+                            <?php foreach ($agg_data->buckets as $bucket) { ?>
+                            <a href="#" class="d-block small font-weight-bold"><?= $this->escape($bucket->{$agg}) ?> <span class="float-right"><?= $this->escape($bucket->count) ?></span></a>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -59,8 +72,15 @@
 <?php $this->yield_end() ?>
 <?php $this->yield_start('body-load') ?>
 <script>
+var table_config = {
+    aggs: <?= json_encode($this->data->aggs) ?>,
+};
+
 $(document).ready(function() {
-  $('#dataTable').DataTable();
+    $('#dataTable').DataTable();
+    $('.toggle-filter').click(function(e){
+        e.preventDefault();
+    });
 });
 </script>
 <?php $this->yield_end() ?>
