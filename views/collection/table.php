@@ -106,7 +106,7 @@ $(document).ready(function() {
                 for (let record of records) {
                     var row = [];
                     for (let col of table_config.columns) {
-                        row.push(record[col]);
+                        row.push(record[col] || '');
                     }
                     data.data.push(row);
                 }
