@@ -1,3 +1,4 @@
-<?= $this->partial('common/header') ?>
-This is Index page
-<?= $this->partial('common/footer') ?>
+<?php $this->yield_start('content') ?>
+<?php $this->yield_end() ?>
+
+<?= $this->partial('layout/app') ?>
