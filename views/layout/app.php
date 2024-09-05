@@ -1,10 +1,10 @@
 <?php
 $items = [
-    'meets' => ['會議', 'fas fa-fw fa-calendar-day'],
-    'bills' => ['提案', 'fas fa-fw fa-file-alt'],
-    'legislators' => ['立委', 'fas fa-fw fa-users'],
-    'ivods' => ['iVOD', 'fas fa-fw fa-video'],
-    'gazettes' => ['公報', 'fas fa-fw fa-newspaper'],
+    'meet' => ['會議', 'fas fa-fw fa-calendar-day'],
+    'bill' => ['提案', 'fas fa-fw fa-file-alt'],
+    'legislator' => ['立委', 'fas fa-fw fa-users'],
+    'ivod' => ['iVOD', 'fas fa-fw fa-video'],
+    'gazette' => ['公報', 'fas fa-fw fa-newspaper'],
 ];
 ?>
 <!DOCTYPE html>
@@ -44,7 +44,7 @@ $items = [
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item <?= $this->if($nav == 'dashboard', 'active') ?>">
+            <li class="nav-item <?= $this->if($this->type == 'dashboard', 'active') ?>">
                 <a class="nav-link" href="/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -57,8 +57,8 @@ $items = [
                 Data
             </div>
             <?php foreach ($items as $key => $item) { ?>
-                <li class="nav-item <?= $this->if($nav == $key, 'active') ?>">
-                    <a class="nav-link" href="/<?= $key ?>">
+                <li class="nav-item <?= $this->if($this->type== $key, 'active') ?>">
+                    <a class="nav-link" href="/collection/table/<?= $key ?>">
                         <i class="<?= $this->escape($item[1]) ?>"></i>
                         <span><?= $this->escape($item[0]) ?> / <?= $this->escape($key) ?></span></a>
                 </li>
