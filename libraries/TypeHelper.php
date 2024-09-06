@@ -185,6 +185,19 @@ class TypeHelper
     public static function getCurrentAgg($type)
     {
         $config = self::getTypeConfig();
+        $query_string = $_SERVER['QUERY_STRING'];
+        $terms = explode('&', $query_string);
+        $agg = [];
+        foreach ($terms as $term) {
+            list($k, $v) = array_map('urldecode', explode('=', $term));
+            if ($k === 'agg') {
+                $agg[] = $v;
+            }
+        }
+        if ($agg) {
+            return $agg;
+        }
+
         return $config[$type]['default_aggs'] ?? [];
     }
 }

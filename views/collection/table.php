@@ -61,6 +61,16 @@ var table_config = {
 };
 
 $(document).ready(function() {
+    $('#dropdown-filter').on('change', 'input[type="checkbox"]', function(){
+        var checked = [];
+        $('#dropdown-filter input[type="checkbox"]').each(function(){
+            if ($(this).prop('checked')) {
+                checked.push($(this).data('field'));
+            }
+        });
+        table_config.aggs = checked;
+        $('#dataTable').DataTable().draw();
+    });
     data_table_config = {
         serverSide: true,
         ajax: function(data, callback, settings){
@@ -91,10 +101,15 @@ $(document).ready(function() {
                 var records = ret[table_config.data_column];
                 $('#dropdown-filter').empty();
                 for (let supported_filter_field of ret.supported_filter_fields) {
-                    var a_dom = $('<a class="dropdown-item toggle-filter" href="#"></a>');
-                    a_dom.text(supported_filter_field);
-                    a_dom.data('field', supported_filter_field);
-                    $('#dropdown-filter').append(a_dom);
+                    var label_dom = $('<label class="form-check"></label>');
+                    var input_dom = $('<input type="checkbox" class="form-check-input">');
+                    input_dom.data('field', supported_filter_field);
+                    if (table_config.aggs.indexOf(supported_filter_field) != -1) {
+                        input_dom.prop('checked', true);
+                    }
+                    label_dom.append(input_dom);
+                    label_dom.append($('<span class="form-check-label"></span>').text(supported_filter_field));
+                    $('#dropdown-filter').append(label_dom);
                 }
                 $('#filter-fields').empty();
                 for (let agg_data of ret.aggs) {
@@ -104,7 +119,7 @@ $(document).ready(function() {
                     $('#filter-fields').append(dom);
                     for (let bucket of agg_data.buckets) {
                         var label_dom = $('<label class="form-check"></label>');
-                        label_dom.append($('<input type="checkbox" class="form-check-input" checked>'));
+                        label_dom.append($('<input type="checkbox" class="form-check-input">'));
                         label_dom.append($('<span class="form-check-label"></span>').text(bucket[agg_data.agg]));
                         label_dom.append($('<span class="badge"></span>').text('(' + bucket.count + ')'));
                         dom.find('.card-body').append(label_dom);
