@@ -3,22 +3,19 @@ $config = TypeHelper::getTypeConfig()[$this->type];
 ?>
 <?php $this->yield_start('content') ?>
 <h1><?= $this->escape($config['name'] . ' / ' . $this->id) ?></h1>
-<table class="table">
-    <thead>
-    <tr>
-        <th>Field</th>
-        <th>Value</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach (TypeHelper::getRecordList($this->data->data) as $record) { ?>
-    <tr>
-        <td><?= $this->escape($record['key']) ?></td>
-        <td><?= $this->escape($record['value']) ?></td>
-    </tr>
+<ul class="nav nav-tabs">
+    <?php foreach ($this->features as $ftab => $fname) { ?>
+    <li class="nav-item">
+    <a class="nav-link <?= $this->if($ftab == $this->tab, 'active') ?>" href="/collection/item/<?= $this->type ?>/<?= urlencode($this->id) ?>/<?= $ftab ?>"><?= $this->escape($fname) ?></a>
+    </li>
     <?php } ?>
-    </tbody>
-</table>
+</ul>
+<?php if ($this->tab == 'rawdata') { ?>
+<?= $this->partial('collection/rawdata', $this) ?>
+<?php } else { ?>
+<?= $this->partial("collection/{$this->type}_{$this->tab}", $this) ?>
+<?php } ?>
+
 <?php $this->yield_end() ?>
 <?php $this->yield_start('body-load') ?>
 <?php $this->yield_end() ?>

@@ -19,6 +19,13 @@ class TypeHelper
                     '屆',
                     '會議種類',
                 ],
+                'item_features' => [
+                    'opendata' => '開放資料',
+                    'speaker' => '發言紀錄',
+                    'gazette' => '公報記錄',
+                    'ivod' => 'iVOD記錄',
+                    'interpellation' => '書面質詢',
+                ],
             ],
             'bill' => [
                 'name' => '議案',
@@ -250,5 +257,13 @@ class TypeHelper
             );
         }
         return $ret;
+    }
+
+    public static function getItemFeatures($type)
+    {
+        $config = self::getTypeConfig();
+        $features = $config[$type]['item_features'] ?? [];
+        $features['rawdata'] = '原始資料';
+        return $features;
     }
 }
