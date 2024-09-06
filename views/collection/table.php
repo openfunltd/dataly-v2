@@ -22,7 +22,7 @@ $config = TypeHelper::getTypeConfig()[$this->type];
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary agg-name"></h6>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="max-height: 200px; overflow-y: auto;">
     </div>
 </div>
 </script>
@@ -58,6 +58,7 @@ var table_config = {
     aggs: <?= json_encode(TypeHelper::getCurrentAgg($this->type)) ?>,
     data_column: <?= json_encode(TypeHelper::getDataColumn($this->type)) ?>,
     columns: <?= json_encode(TypeHelper::getColumns($this->type)) ?>,
+    filter: <?= json_encode(TypeHelper::getCurrentFilter()) ?>,
 };
 
 $(document).ready(function() {
@@ -71,6 +72,17 @@ $(document).ready(function() {
         table_config.aggs = checked;
         $('#dataTable').DataTable().draw();
     });
+
+    $('#filter-fields').on('change', 'input[type="checkbox"]', function(){
+        table_config.filter = [];
+        $('#filter-fields input[type="checkbox"]').each(function(){
+            if ($(this).prop('checked')) {
+                table_config.filter.push([$(this).data('field'), $(this).data('value')]);
+            }
+        });
+        $('#dataTable').DataTable().draw();
+    });
+
     data_table_config = {
         serverSide: true,
         ajax: function(data, callback, settings){
@@ -93,6 +105,10 @@ $(document).ready(function() {
             for (let agg_fields of table_config.aggs) {
                 api_url += '&agg=' + encodeURIComponent(agg_fields);
                 page_params.push('agg=' + encodeURIComponent(agg_fields));
+            }
+            for (let filter of table_config.filter) {
+                api_url += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
+                page_params.push('filter=' + encodeURIComponent(filter[0] + ':' + filter[1]));
             }
             window.history.replaceState({}, '', '?' + page_params.join('&'));
 
@@ -119,7 +135,15 @@ $(document).ready(function() {
                     $('#filter-fields').append(dom);
                     for (let bucket of agg_data.buckets) {
                         var label_dom = $('<label class="form-check"></label>');
-                        label_dom.append($('<input type="checkbox" class="form-check-input">'));
+                        var input_dom = $('<input type="checkbox" class="form-check-input">');
+                        input_dom.data('field', agg_data.agg);
+                        input_dom.data('value', bucket[agg_data.agg]);
+                        for (let filter of table_config.filter) {
+                            if (filter[0] == agg_data.agg && filter[1] == bucket[agg_data.agg]) {
+                                input_dom.prop('checked', true);
+                            }
+                        }
+                        label_dom.append(input_dom);
                         label_dom.append($('<span class="form-check-label"></span>').text(bucket[agg_data.agg]));
                         label_dom.append($('<span class="badge"></span>').text('(' + bucket.count + ')'));
                         dom.find('.card-body').append(label_dom);

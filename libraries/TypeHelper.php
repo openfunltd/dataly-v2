@@ -182,6 +182,21 @@ class TypeHelper
         return LYAPI::apiQuery($url, "抓取 {$type} 的資料");
     }
 
+    public static function getCurrentFilter()
+    {
+        $config = self::getTypeConfig();
+        $query_string = $_SERVER['QUERY_STRING'];
+        $terms = explode('&', $query_string);
+        $filter = [];
+        foreach ($terms as $term) {
+            list($k, $v) = array_map('urldecode', explode('=', $term));
+            if ($k === 'filter') {
+                $filter[] = explode(':', $v, 2);
+            }
+        }
+        return $filter;
+    }
+
     public static function getCurrentAgg($type)
     {
         $config = self::getTypeConfig();
