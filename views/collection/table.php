@@ -61,19 +61,30 @@ var table_config = {
 };
 
 $(document).ready(function() {
-    $('#dataTable').DataTable({
+    data_table_config = {
         serverSide: true,
         ajax: function(data, callback, settings){
             var api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
+            page_params = [];
             api_url += '?limit=' + data.length;
-            api_url += '&page=' + (data.start / data.length + 1);
+            if (data.length != 10) {
+                page_params.push('limit=' + data.length);
+            }
+            page = Math.floor(data.start / data.length) + 1;
+            api_url += '&page=' + page;
+            if (page != 1) {
+                page_params.push('page=' + page);
+            }
             if (data.search.value) {
                 v = data.search.value.split(/\s+/).map(function(v){ return '"' + v + '"'; }).join(' ')
                 api_url += '&q=' + encodeURIComponent(v);
+                page_params.push('q=' + encodeURIComponent(data.search.value));
             }
             for (let agg_fields of table_config.aggs) {
                 api_url += '&agg=' + encodeURIComponent(agg_fields);
+                page_params.push('agg=' + encodeURIComponent(agg_fields));
             }
+            window.history.replaceState({}, '', '?' + page_params.join('&'));
 
             // check search word
             $.get(api_url, function(ret) {
@@ -113,7 +124,22 @@ $(document).ready(function() {
                 callback(data);
             }, 'json');
         }
-    });
+    };
+    // handle url
+    var url = new URL(window.location.href);
+    var page_params = [];
+    for (let key of url.searchParams.keys()) {
+        if (key == 'page') {
+            data_table_config.page = parseInt(url.searchParams.get(key));
+        } else if (key == 'limit') {
+            data_table_config.pageLength = parseInt(url.searchParams.get(key));
+        } else if (key == 'q') {
+            data_table_config.search = {search: url.searchParams.get(key)};
+        }
+    }
+
+    $('#dataTable').DataTable(data_table_config);
+
     $('.toggle-filter').click(function(e){
         e.preventDefault();
     });
