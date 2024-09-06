@@ -6,4 +6,11 @@ class CollectionController extends MiniEngine_Controller
     {
         $this->view->type = $type;
     }
+
+    public function itemAction($type, $id)
+    {
+        $this->view->type = $type;
+        $this->view->id = $id;
+        $this->view->data = TypeHelper::getDataByID($type, $id);
+    }
 }

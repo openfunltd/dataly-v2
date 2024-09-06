@@ -43,6 +43,7 @@ $config = TypeHelper::getTypeConfig()[$this->type];
                             <?php foreach (TypeHelper::getColumns($this->type) as $col) { ?>
                             <th><?= $this->escape($col) ?></th>
                             <?php } ?>
+                            <th>連結</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -55,6 +56,7 @@ $config = TypeHelper::getTypeConfig()[$this->type];
 <?php $this->yield_start('body-load') ?>
 <script>
 var table_config = {
+    type: <?= json_encode($this->type) ?>,
     aggs: <?= json_encode(TypeHelper::getCurrentAgg($this->type)) ?>,
     data_column: <?= json_encode(TypeHelper::getDataColumn($this->type)) ?>,
     columns: <?= json_encode(TypeHelper::getColumns($this->type)) ?>,
@@ -159,6 +161,14 @@ $(document).ready(function() {
                     for (let col of table_config.columns) {
                         row.push(record[col] || '');
                     }
+                    var id_terms = [];
+                    for (let id_field of ret.id_fields) {
+                        id_terms.push(record[id_field]);
+                    }
+                    var uri = '/collection/item/' + table_config.type + '/' + encodeURIComponent(id_terms.join('-'));
+                    var a_dom = $('<a></a>').attr('href', uri);
+                    a_dom.append($('<i class="fas fa-fw fa-eye"></i>'));
+                    row.push($('<span></span>').append(a_dom).html());
                     data.data.push(row);
                 }
                 callback(data);

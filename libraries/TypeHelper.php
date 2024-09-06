@@ -153,6 +153,12 @@ class TypeHelper
         return $type . 's';
     }
 
+    public static function getDataByID($type, $id)
+    {
+        $ret = LYAPI::apiQuery("/{$type}/" . urlencode($id), "抓取 {$type} 的 {$id} 資料");
+        return $ret;
+    }
+
     public static function getData($data, $type)
     {
         return $data->{self::getDataColumn($type)} ?? [];
@@ -214,5 +220,35 @@ class TypeHelper
         }
 
         return $config[$type]['default_aggs'] ?? [];
+    }
+
+    public static function getRecordList($data, $prefix = '')
+    {
+        if (is_scalar($data)) {
+            return [[
+                'key' => rtrim($prefix, '.'),
+                'value' => $data,
+            ]];
+        }
+
+        if (is_array($data)) {
+            $ret = [];
+            foreach ($data as $idx => $item) {
+                $ret = array_merge(
+                    $ret,
+                    self::getRecordList($item, rtrim($prefix, '.') . "[{$idx}].")
+                );
+            }
+            return $ret;
+        }
+
+        $ret = [];
+        foreach ($data as $k => $v) {
+            $ret = array_merge(
+                $ret,
+                self::getRecordList($v, "{$prefix}{$k}.")
+            );
+        }
+        return $ret;
     }
 }
