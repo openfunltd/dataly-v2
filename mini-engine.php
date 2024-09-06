@@ -161,7 +161,7 @@ class MiniEngine
         $uri = explode('/', $uri);
         $controller = strtolower($uri[0] ?? 'index') ?: 'index';
         $action = strtolower($uri[1] ?? 'index') ?: 'index';
-        $params = array_slice($uri, 2);
+        $params = array_map('urldecode', array_slice($uri, 2));
         return [$controller, $action, $params];
     }
 }
