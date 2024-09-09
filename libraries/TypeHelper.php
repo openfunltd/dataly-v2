@@ -21,7 +21,6 @@ class TypeHelper
                 ],
                 'item_features' => [
                     'opendata' => '開放資料',
-                    'speaker' => '發言紀錄',
                     'gazette' => '公報記錄',
                     'ivod' => 'iVOD記錄',
                     'interpellation' => '書面質詢',
