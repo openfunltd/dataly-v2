@@ -9,14 +9,15 @@ class TypeHelper
                 'name' => '會議',
                 'icon' => 'fas fa-fw fa-calendar-day',
                 'cols' => [
-                    '會議代碼',
-                    '日期',
                     '屆',
                     '會期',
+                    '會議代碼',
+                    '日期',
                     '會議標題',
                 ],
                 'default_aggs' => [
                     '屆',
+                    '會期',
                     '會議種類',
                 ],
                 'item_features' => [
@@ -48,14 +49,14 @@ class TypeHelper
                 'name' => '立委',
                 'icon' => 'fas fa-fw fa-user-tie',
                 'cols' => [
-                    '屆期',
+                    '屆',
                     '委員姓名',
                     '黨籍',
                     '選區名稱',
                     '歷屆立法委員編號',
                 ],
                 'default_aggs' => [
-                    '屆期',
+                    '屆',
                     '黨籍',
                 ],
             ],
