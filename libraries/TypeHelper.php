@@ -20,11 +20,10 @@ class TypeHelper
                     '會議種類',
                 ],
                 'item_features' => [
+                    'info' => '資訊',
                     'opendata' => '開放資料',
                     'proceedings' => '議事錄',
                     'gazette' => '公報記錄',
-                    'ivod' => 'iVOD記錄',
-                    'interpellation' => '書面質詢',
                 ],
             ],
             'bill' => [
