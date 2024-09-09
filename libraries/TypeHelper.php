@@ -59,6 +59,10 @@ class TypeHelper
                     '屆',
                     '黨籍',
                 ],
+                'collection_features' => [
+                    'table' => '列表',
+                    'list' => '立委列表',
+                ],
             ],
             'committee' => [
                 'name' => '委員會',
