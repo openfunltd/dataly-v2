@@ -2,8 +2,6 @@
 $config = TypeHelper::getTypeConfig()[$this->type];
 LYAPI::addTemplateLog();
 ?>
-<?php $this->yield_start('content') ?>
-<h1><?= $this->escape($config['name'] . ' / ' . $this->type) ?></h1>
 <div class="row">
     <div class="col-md-3">
         <div class="card shadow mb-4">
@@ -53,8 +51,8 @@ LYAPI::addTemplateLog();
         </div>
     </div>
 </div>
-<?php $this->yield_end() ?>
-<?php $this->yield_start('body-load') ?>
+
+<?php $this->yield_start('list-body-load') ?>
 <script>
 var table_config = {
     type: <?= json_encode($this->type) ?>,
@@ -210,5 +208,3 @@ $(document).ready(function() {
 });
 </script>
 <?php $this->yield_end() ?>
-
-<?= $this->partial('layout/app', $this) ?>

@@ -49,7 +49,7 @@
             </div>
             <?php foreach (TypeHelper::getTypeConfig() as $key => $config) { ?>
                 <li class="nav-item <?= $this->if($this->type== $key, 'active') ?>">
-                    <a class="nav-link" href="/collection/table/<?= $key ?>">
+                    <a class="nav-link" href="/collection/list/<?= $key ?>">
                         <i class="<?= $this->escape($config['icon']) ?>"></i>
                         <span><?= $this->escape($config['name']) ?> / <?= $this->escape($key) ?></span></a>
                 </li>

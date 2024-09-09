@@ -2,9 +2,17 @@
 
 class CollectionController extends MiniEngine_Controller
 {
-    public function tableAction($type)
+    public function listAction($type, $tab = null)
     {
         $this->view->type = $type;
+        $this->view->features = TypeHelper::getCollectionFeatures($type);
+        if (!$tab) {
+            $tab = key($this->view->features);
+        }
+        $this->view->tab = $tab;
+        if (!array_key_exists($tab, $this->view->features)) {
+            throw new Exception('Invalid tab: ' . $tab);
+        }
     }
 
     public function itemAction($type, $id, $tab = null)

@@ -266,4 +266,12 @@ class TypeHelper
         $features['rawdata'] = '原始資料';
         return $features;
     }
+
+    public static function getCollectionFeatures($type)
+    {
+        $config = self::getTypeConfig();
+        $features = $config[$type]['collection_features'] ?? [];
+        $features['table'] = '列表';
+        return $features;
+    }
 }
