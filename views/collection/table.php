@@ -1,5 +1,6 @@
 <?php
 $config = TypeHelper::getTypeConfig()[$this->type];
+LYAPI::addTemplateLog();
 ?>
 <?php $this->yield_start('content') ?>
 <h1><?= $this->escape($config['name'] . ' / ' . $this->type) ?></h1>
@@ -91,29 +92,38 @@ $(document).ready(function() {
         ajax: function(data, callback, settings){
             var api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
             page_params = [];
+            api_terms = [];
             api_url += '?limit=' + data.length;
+            api_terms.push("筆數:" + data.length);
             if (data.length != 10) {
                 page_params.push('limit=' + data.length);
             }
             page = Math.floor(data.start / data.length) + 1;
             api_url += '&page=' + page;
+            api_terms.push("頁數:" + page);
             if (page != 1) {
                 page_params.push('page=' + page);
             }
             if (data.search.value) {
-                v = data.search.value.split(/\s+/).map(function(v){ return '"' + v + '"'; }).join(' ')
+                v = data.search.value.split(/\s+/).map(function(v){ return '"' + v + '"'; }).join(' ');
                 api_url += '&q=' + encodeURIComponent(v);
+                api_terms.push("搜尋:" + v);
                 page_params.push('q=' + encodeURIComponent(data.search.value));
             }
             for (let agg_fields of table_config.aggs) {
                 api_url += '&agg=' + encodeURIComponent(agg_fields);
+                api_terms.push("分群:" + agg_fields);
                 page_params.push('agg=' + encodeURIComponent(agg_fields));
             }
             for (let filter of table_config.filter) {
                 api_url += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
+                api_terms.push("篩選:" + filter[0] + ':' + filter[1]);
                 page_params.push('filter=' + encodeURIComponent(filter[0] + ':' + filter[1]));
             }
             window.history.replaceState({}, '', '?' + page_params.join('&'));
+
+            $('#api-log li:first a').attr('href', api_url);
+            $('#api-log li:first a').text("搜尋條件" + api_terms.join(', '));
 
             // check search word
             $.get(api_url, function(ret) {
@@ -147,7 +157,11 @@ $(document).ready(function() {
                             }
                         }
                         label_dom.append(input_dom);
-                        label_dom.append($('<span class="form-check-label"></span>').text(bucket[agg_data.agg]));
+                        if ('undefined' !== typeof(bucket[agg_data.agg + ':str'])) {
+                            label_dom.append($('<span class="form-check-label"></span>').text(bucket[agg_data.agg + ':str']));
+                        } else {
+                            label_dom.append($('<span class="form-check-label"></span>').text(bucket[agg_data.agg]));
+                        }
                         label_dom.append($('<span class="badge"></span>').text('(' + bucket.count + ')'));
                         dom.find('.card-body').append(label_dom);
                     }

@@ -141,7 +141,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">本頁面使用 API</h5>
-                                <ul>
+                                <ul id="api-log">
                                     <?php foreach (LYAPI::getLogs() as $log) { ?>
                                         <li>
                                         <a href="<?= $this->escape($log[0]) ?>" target="_blank"><?= $this->escape($log[1]) ?></a>

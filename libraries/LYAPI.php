@@ -30,8 +30,13 @@ class LYAPI
         if (is_null(self::$log)) {
             self::$log = [];
         }
-        self::$log[$reason] = [$url, $reason];
+        self::$log[] = [$url, $reason];
 
         return $res_json;
+    }
+
+    public static function addTemplateLog()
+    {
+        self::$log[] = ['template', 'template'];
     }
 }
