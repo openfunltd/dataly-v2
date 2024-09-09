@@ -1,3 +1,14 @@
+<?php
+$handle_data = function ($data) {
+    if (is_array($data)) {
+        return $this->escape(implode('、', $data));
+    }
+    if (strpos($data, 'http') === 0) {
+        return sprintf("<a href=\"%s\">%s</a>", $this->escape($data), $this->escape($data));
+    }
+    return $this->escape($data);
+};
+?>
 <div class="card">
     <div class="card-header">
         <h2>開放資料</h2>
@@ -42,11 +53,7 @@
           <tr>
               <td><?= $this->escape($key) ?></td>
               <td>
-                  <?php if (is_array($value)) { ?>
-                  <?= $this->escape(implode('、', $value)) ?>
-                  <?php } else { ?>
-                  <?= $this->escape($value) ?>
-                  <?php } ?>
+                  <?= $handle_data($value) ?>
               </td>
           </tr>
           <?php } ?>
@@ -58,6 +65,9 @@
 
 <?php foreach ($this->data->data->{'發言紀錄'} as $meet_data) { ?>
 <div class="card" id="speaker-<?= $meet_data->smeetingDate ?>-<?= $meet_data->speechKindName ?>">
+  <div class="card-header">
+    <h2><?= $this->escape($meet_data->smeetingDate) ?> <?= $this->escape($meet_data->speechKindName) ?></h2>
+  </div>
   <div class="card-body">
       <table class="table">
           <thead>
@@ -71,11 +81,7 @@
           <tr>
               <td><?= $this->escape($key) ?></td>
               <td>
-                  <?php if (is_array($value)) { ?>
-                  <?= $this->escape(implode('、', $value)) ?>
-                  <?php } else { ?>
-                  <?= $this->escape($value) ?>
-                  <?php } ?>
+                  <?= $handle_data($value) ?>
               </td>
           </tr>
           <?php } ?>
