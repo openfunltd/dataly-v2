@@ -194,17 +194,17 @@ class MiniEngine_Controller_ViewObject
         return isset($this->_data[$name]);
     }
 
-    protected $_current_yield = null;
+    protected $_current_yield = [];
     public function yield_start($name)
     {
         ob_start();
         $this->_yield[$name] = '';
-        $this->_current_yield = $name;
+        array_push($this->_current_yield, $name);
     }
 
     public function yield_end()
     {
-        $name = $this->_current_yield;
+        $name = array_pop($this->_current_yield);
         $this->_yield[$name] = ob_get_clean();
     }
 
