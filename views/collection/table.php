@@ -20,8 +20,7 @@ $config = TypeHelper::getTypeConfig()[$this->type];
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary agg-name"></h6>
     </div>
-    <div class="card-body" style="max-height: 200px; overflow-y: auto;">
-    </div>
+    <div class="card-body"></div>
 </div>
 </script>
 
@@ -281,4 +280,17 @@ $(document).ready(function() {
     });
 });
 </script>
+<style>
+#filter-fields .card-body {
+  max-height: 200px;
+  overflow-y: auto;
+  border-bottom: 1px solid #ccc;
+}
+#filter-fields .card-body::-webkit-scrollbar {
+  width: 5px;
+}
+#filter-fields .card-body::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+}
+</style>
 <?php $this->yield_end() ?>
