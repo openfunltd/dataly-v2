@@ -203,6 +203,12 @@ $(document).ready(function() {
                     var dom = $(tmpl);
                     dom.find('.agg-name').text(agg_data.agg);
                     agg_dom[agg_data.agg] = dom;
+                    // 如果 agg_data.agg 是 "屆" 的話，裡面改成依照 bucket[agg_data.agg] 排序
+                    if (['屆', '會期'].indexOf(agg_data.agg) != -1) {
+                        agg_data.buckets.sort(function(a, b){
+                            return b[agg_data.agg] - a[agg_data.agg];
+                        });
+                    }
                     for (let bucket of agg_data.buckets) {
                         var label_dom = $('<label class="form-check"></label>');
                         var input_dom = $('<input type="checkbox" class="form-check-input">');
