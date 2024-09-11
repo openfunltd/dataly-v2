@@ -44,6 +44,9 @@ class TypeHelper
                     '議案類別',
                     '議案狀態',
                 ],
+                'item_features' => [
+                    'law-diff' => '法律對照表',
+                ],
             ],
             'legislator' => [
                 'name' => '立委',
