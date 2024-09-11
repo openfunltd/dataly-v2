@@ -181,9 +181,9 @@ class TypeHelper
     public static function getAPIURL($type)
     {
         if (getenv('LYAPI_HOST')) {
-            $url = 'https://' . getenv('LYAPI_HOST') . $url;
+            $url = 'https://' . getenv('LYAPI_HOST');
         } else {
-            $url = 'https://v2.ly.govapi.tw' . $url;
+            $url = 'https://v2.ly.govapi.tw';
         }
         return "{$url}/{$type}s";
     }
