@@ -1,6 +1,5 @@
 <?php
 $config = TypeHelper::getTypeConfig()[$this->type];
-LYAPI::addTemplateLog();
 ?>
 <div class="row">
     <div class="col-md-3">
@@ -92,6 +91,7 @@ $(document).ready(function() {
             // 檢查有哪些 field 有設定 filter
             var filter_fields = [];
             var filter_agg_api_urls = {};
+            var filter_agg_api_reasons = {};
             for (let filter of table_config.filter) {
                 filter_fields.push(filter[0]);
             }
@@ -104,6 +104,7 @@ $(document).ready(function() {
                 filter_agg_api_urls[filter_field] = records_api_url;
                 filter_agg_api_urls[filter_field] += "?limit=0";
                 filter_agg_api_urls[filter_field] += "&agg=" + encodeURIComponent(filter_field);
+                filter_agg_api_reasons[filter_field] = "搜尋 " + table_config.type + " 條件: 筆數:0, 分群:" + filter_field;
             }
 
             page_params = [];
@@ -126,6 +127,7 @@ $(document).ready(function() {
                 page_params.push('q=' + encodeURIComponent(data.search.value));
                 for (let filter_field of filter_fields) {
                     filter_agg_api_urls[filter_field] += "&q=" + encodeURIComponent(v);
+                    filter_agg_api_reasons[filter_field] += "搜尋:" + v;
                 }
             }
             for (let agg_fields of table_config.aggs) {
@@ -146,17 +148,18 @@ $(document).ready(function() {
                         continue;
                     }
                     filter_agg_api_urls[filter_field] += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
+                    filter_agg_api_reasons[filter_field] += "篩選:" + filter[0] + ':' + filter[1];
                 }
             }
             window.history.replaceState({}, '', '?' + page_params.join('&'));
 
-            $('#api-log li:first a').attr('href', records_api_url);
-            $('#api-log li:first a').text("搜尋條件" + api_terms.join(', '));
-
+            $('#api-log').empty();
+            add_log(records_api_url, "搜尋 " + table_config.type + " 條件: " + api_terms.join(', '));
 
             var promises = [];
             promises.push($.get(records_api_url));
             for (let filter_field in filter_agg_api_urls) {
+                add_log(filter_agg_api_urls[filter_field], filter_agg_api_reasons[filter_field]);
                 promises.push($.get(filter_agg_api_urls[filter_field]));
             }
 
@@ -245,6 +248,12 @@ $(document).ready(function() {
                 callback(data);
             }, 'json');
         }
+    };
+
+    var add_log = function(url, reason) {
+        var li_dom = $($('#tmpl-api-log').html());
+        $('.link', li_dom).attr('href', url).text(reason);
+        $('#api-log').append(li_dom);
     };
     // handle url
     var url = new URL(window.location.href);

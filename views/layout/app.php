@@ -137,7 +137,6 @@
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
-                    <?php if (LYAPI::hasLog()) { ?>
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">本頁面使用 API</h5>
@@ -148,9 +147,13 @@
                                         </li>
                                     <?php } ?>
                                 </ul>
+                <script id="tmpl-api-log" type="text/html">
+                <li>
+                <a href="" target="_blank" class="link"></a>
+                </li>
+                </script>
                             </div>
                         </div>
-                    <?php } ?>
                     <div class="copyright text-center my-auto">
                         <span>
                             <?= $this->escape(getenv('APP_NAME')) ?> 由 <a href="https://openfun.tw" target="_blank">歐噴有限公司</a> 開發，目的是是立法院資料更透明更容易被使用
