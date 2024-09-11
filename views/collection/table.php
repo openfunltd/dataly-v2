@@ -130,12 +130,12 @@ $(document).ready(function() {
                 }
             }
             for (let agg_fields of table_config.aggs) {
+                page_params.push('agg=' + encodeURIComponent(agg_fields));
                 if (filter_fields.indexOf(agg_fields) != -1) {
                     continue;
                 }
                 records_api_url += '&agg=' + encodeURIComponent(agg_fields);
                 api_terms.push("分群:" + agg_fields);
-                page_params.push('agg=' + encodeURIComponent(agg_fields));
             }
             for (let filter of table_config.filter) {
                 records_api_url += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
