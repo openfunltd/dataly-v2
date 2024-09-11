@@ -85,7 +85,7 @@ $(document).ready(function() {
     });
 
     data_table_config = {
-        dom: '<"top"if>rt<"bottom"ip><"clear">',
+        dom: '<"top"lif>rt<"bottom"ip><"clear">',
         serverSide: true,
         ajax: function(data, callback, settings){
             var api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
