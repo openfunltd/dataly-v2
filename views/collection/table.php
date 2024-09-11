@@ -88,43 +88,98 @@ $(document).ready(function() {
         dom: '<"top"lif>rt<"bottom"ip><"clear">',
         serverSide: true,
         ajax: function(data, callback, settings){
-            var api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
+            var records_api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
+            // 檢查有哪些 field 有設定 filter
+            var filter_fields = [];
+            var filter_agg_api_urls = {};
+            for (let filter of table_config.filter) {
+                filter_fields.push(filter[0]);
+            }
+            // 設為不重覆
+            filter_fields = filter_fields.filter(function(item, pos) {
+                return filter_fields.indexOf(item) == pos;
+            });
+            // 設定各 filter 網址
+            for (let filter_field of filter_fields) {
+                filter_agg_api_urls[filter_field] = records_api_url;
+                filter_agg_api_urls[filter_field] += "?limit=0";
+                filter_agg_api_urls[filter_field] += "&agg=" + encodeURIComponent(filter_field);
+            }
+
             page_params = [];
             api_terms = [];
-            api_url += '?limit=' + data.length;
+            records_api_url += '?limit=' + data.length;
             api_terms.push("筆數:" + data.length);
             if (data.length != 10) {
                 page_params.push('limit=' + data.length);
             }
             page = Math.floor(data.start / data.length) + 1;
-            api_url += '&page=' + page;
+            records_api_url += '&page=' + page;
             api_terms.push("頁數:" + page);
             if (page != 1) {
                 page_params.push('page=' + page);
             }
             if (data.search.value) {
                 v = data.search.value.split(/\s+/).map(function(v){ return '"' + v + '"'; }).join(' ');
-                api_url += '&q=' + encodeURIComponent(v);
+                records_api_url += '&q=' + encodeURIComponent(v);
                 api_terms.push("搜尋:" + v);
                 page_params.push('q=' + encodeURIComponent(data.search.value));
+                for (let filter_field of filter_fields) {
+                    filter_agg_api_urls[filter_field] += "&q=" + encodeURIComponent(v);
+                }
             }
             for (let agg_fields of table_config.aggs) {
-                api_url += '&agg=' + encodeURIComponent(agg_fields);
+                if (filter_fields.indexOf(agg_fields) != -1) {
+                    continue;
+                }
+                records_api_url += '&agg=' + encodeURIComponent(agg_fields);
                 api_terms.push("分群:" + agg_fields);
                 page_params.push('agg=' + encodeURIComponent(agg_fields));
             }
             for (let filter of table_config.filter) {
-                api_url += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
+                records_api_url += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
                 api_terms.push("篩選:" + filter[0] + ':' + filter[1]);
                 page_params.push('filter=' + encodeURIComponent(filter[0] + ':' + filter[1]));
+
+                for (let filter_field of filter_fields) {
+                    if (filter_field == filter[0]) {
+                        continue;
+                    }
+                    filter_agg_api_urls[filter_field] += '&' + encodeURIComponent(filter[0]) + '=' + encodeURIComponent(filter[1]);
+                }
             }
             window.history.replaceState({}, '', '?' + page_params.join('&'));
 
-            $('#api-log li:first a').attr('href', api_url);
+            $('#api-log li:first a').attr('href', records_api_url);
             $('#api-log li:first a').text("搜尋條件" + api_terms.join(', '));
 
-            // check search word
-            $.get(api_url, function(ret) {
+
+            var promises = [];
+            promises.push($.get(records_api_url));
+            for (let filter_field in filter_agg_api_urls) {
+                promises.push($.get(filter_agg_api_urls[filter_field]));
+            }
+
+            $.when.apply($, promises).done(function(){
+                var rets = [];
+                if (promises.length == 1) {
+                    ret = arguments[0];
+                } else {
+                    for (let i = 0; i < promises.length; i++) {
+                        rets.push(arguments[i][0]);
+                    }
+                    ret = rets.shift();
+                }
+                if ('undefined' === typeof(ret.aggs)) {
+                    ret.aggs = [];
+                }
+                // 這是包含資料的回傳
+
+                var agg_data = {};
+                for (let agg_ret of rets) {
+                    ret.aggs = ret.aggs.concat(agg_ret.aggs);
+                }
+
                 var records = ret[table_config.data_column];
                 $('#dropdown-filter').empty();
                 for (let supported_filter_field of ret.supported_filter_fields) {
@@ -139,11 +194,12 @@ $(document).ready(function() {
                     $('#dropdown-filter').append(label_dom);
                 }
                 $('#filter-fields').empty();
+                agg_dom = {};
                 for (let agg_data of ret.aggs) {
                     var tmpl = $('#tmpl-filter-field').html();
                     var dom = $(tmpl);
                     dom.find('.agg-name').text(agg_data.agg);
-                    $('#filter-fields').append(dom);
+                    agg_dom[agg_data.agg] = dom;
                     for (let bucket of agg_data.buckets) {
                         var label_dom = $('<label class="form-check"></label>');
                         var input_dom = $('<input type="checkbox" class="form-check-input">');
@@ -163,6 +219,9 @@ $(document).ready(function() {
                         label_dom.append($('<span class="badge"></span>').text('(' + bucket.count + ')'));
                         dom.find('.card-body').append(label_dom);
                     }
+                }
+                for (let agg of table_config.aggs) {
+                    $('#filter-fields').append(agg_dom[agg]);
                 }
 
                 data.data = [];
