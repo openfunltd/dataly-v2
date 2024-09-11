@@ -90,6 +90,9 @@ class TypeHelper
                     '屆',
                     '影片種類',
                 ],
+                'item_features' => [
+                    'video' => '影片',
+                ],
             ],
             'law' => [
                 'name' => '法律',
