@@ -73,7 +73,7 @@ class TypeHelper
                 'cols' => [
                     '委員會代號',
                     '委員會名稱',
-                    '委員會類別',
+                    '委員會類別:str',
                 ],
                 'default_aggs' => [
                     '委員會類別',
