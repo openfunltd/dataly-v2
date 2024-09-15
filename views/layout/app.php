@@ -11,8 +11,8 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-        <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
         <link href="https://cdn.datatables.net/v/bs4-4.6.0/jq-3.7.0/dt-2.1.6/fc-5.0.1/fh-4.0.1/kt-2.12.1/r-3.0.3/sl-2.1.0/datatables.min.css" rel="stylesheet">
+        <link href="/static/css/sb-admin-2.min.css" rel="stylesheet">
         <?= $this->yield('head-load') ?>
 </head>
 <body id="page-top">
