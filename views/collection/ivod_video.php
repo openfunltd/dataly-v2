@@ -25,6 +25,7 @@
         $content->text = $this->escape($segment->text);
         $ai_transcript[] = $content;
     }
+    $subtitles = json_encode($this->data->data->transcript->whisperx);
 ?>
 <div id="ai-transcript" class="card shadow mb-4">
     <div class="card-header py-3">
@@ -46,7 +47,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($ai_transcript as $idx => $segment): ?>
-                                <tr id="s-{{ $idx }}">
+                                <tr id="s-<?= $idx ?>">
                                     <td><?= $segment->start ?></td>
                                     <td><?= $segment->end ?></td>
                                     <td><?= $segment->text ?></td>
@@ -61,10 +62,11 @@
             </div>
         </div>
     </div>
-<div>
-  <video id="video" controls width="100%"></video>
 </div>
-<script src="/static/js/hls.js"></script>
+<script src="/static/js/ivod/hls.js"></script>
+<script>
+    var subtitles = <?= $subtitles ?>;
+</script>
 <script>
     if(Hls.isSupported()) {
         var video = document.getElementById('video');
