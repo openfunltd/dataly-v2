@@ -200,6 +200,7 @@
     <script src="https://cdn.datatables.net/v/bs4-4.6.0/jq-3.7.0/dt-2.1.6/fc-5.0.1/fh-4.0.1/kt-2.12.1/r-3.0.3/sl-2.1.0/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
     <script src="/static/js/sb-admin-2.min.js"></script>
+    <script src="/static/js/ivod/custom.js"></script>
     <?= $this->yield('body-load') ?>
 
 </body>
