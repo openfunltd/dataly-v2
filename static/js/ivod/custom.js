@@ -1,44 +1,46 @@
-const table = $('#subtitleTable').DataTable({
-  select: 'single',
-  ordering: false,
-  scrollCollapse: true,
-  scrollY: '300px',
-  paging: false,
-  fixedHeader: true,
-});
+window.onload = function(){
+  const table = $('#subtitleTable').DataTable({
+    select: 'single',
+    ordering: false,
+    scrollCollapse: true,
+    scrollY: '300px',
+    paging: false,
+    fixedHeader: true,
+  });
 
-table.on('select', function (e, dt, type, index) {
-  data = table.row(index).data();
-  video.currentTime = timeStringToSeconds(data[0]);
-  video.play();
-  video.focus();
-});
+  table.on('select', function (e, dt, type, index) {
+    data = table.row(index).data();
+    video.currentTime = timeStringToSeconds(data[0]);
+    video.play();
+    video.focus();
+  });
 
-timeCache = 0;
-d_g = $('#s-0').offset().top;
-video.addEventListener("timeupdate", function(event) {
-  time = this.currentTime;
-  if (Math.abs(timeCache - time) < 0.5) {
-    return;
-  }
-  timeCache = time;
-  desiredIndex = timecodeBinarySearch(subtitles, time);
-  if (desiredIndex == -1) {
-    return;
-  }
-  desiredTr = $('#s-' + desiredIndex);
-  selectedTr = $('tr.selected');
-  if (desiredTr.is(selectedTr)) {
-    return;
-  }
-  if (selectedTr.length > 0) {
-    selectedTr.removeClass('selected');
-  }
-  desiredTr.addClass('selected');
-  scroll_pos = $('.dt-scroll-body').scrollTop();
-  d_x = desiredTr.offset().top;
-  $('.dt-scroll-body').scrollTop(scroll_pos + d_x - d_g);
-});
+  timeCache = 0;
+  d_g = $('#s-0').offset().top;
+  video.addEventListener("timeupdate", function(event) {
+    time = this.currentTime;
+    if (Math.abs(timeCache - time) < 0.5) {
+      return;
+    }
+    timeCache = time;
+    desiredIndex = timecodeBinarySearch(subtitles, time);
+    if (desiredIndex == -1) {
+      return;
+    }
+    desiredTr = $('#s-' + desiredIndex);
+    selectedTr = $('tr.selected');
+    if (desiredTr.is(selectedTr)) {
+      return;
+    }
+    if (selectedTr.length > 0) {
+      selectedTr.removeClass('selected');
+    }
+    desiredTr.addClass('selected');
+    scroll_pos = $('.dt-scroll-body').scrollTop();
+    d_x = desiredTr.offset().top;
+    $('.dt-scroll-body').scrollTop(scroll_pos + d_x - d_g);
+  });
+};
 
 function timecodeBinarySearch(subtitles, time) {
   left = 0;
