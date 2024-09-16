@@ -95,6 +95,7 @@ class TypeHelper
                 ],
                 'item_features' => [
                     'ai-transcript' => 'AI 逐字稿',
+                    'gazette' => '公報紀錄',
                 ],
             ],
             'law' => [
