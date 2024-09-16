@@ -94,7 +94,7 @@ class TypeHelper
                     '影片種類',
                 ],
                 'item_features' => [
-                    'video' => '影片',
+                    'ai-transcript' => 'AI 逐字稿',
                 ],
             ],
             'law' => [
