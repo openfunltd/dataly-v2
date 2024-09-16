@@ -78,4 +78,4 @@
 <script>
     var subtitles = <?= $subtitles ?>;
 </script>
-<script src="/static/js/ivod/custom.js"></script>
+<script src="/static/js/ivod/custom_ai-transcript.js"></script>
