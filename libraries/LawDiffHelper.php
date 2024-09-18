@@ -10,7 +10,7 @@ class LawDiffHelper
             sprintf("查詢 bill %d 的關聯議案", $bill_no)
         );
 
-        if (! property_exists($bills, 'bills')) {
+        if (is_null($bills) or !property_exists($bills, 'bills')) {
             $bills = [];
             $bills[] = $bill;
         } else {
