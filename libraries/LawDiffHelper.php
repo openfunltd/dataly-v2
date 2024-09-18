@@ -51,17 +51,17 @@ class LawDiffHelper
             $bill_n_law_idx_mapping[] = $bill_n_law_indexes;
 
             // render column values into related bills 
-            $related_bill = [];
-            $related_bill['bill_idx'] = $bill_idx;
-            $related_bill['bill_name'] = self::parseBillName($bill);
-            $related_bill['version_name'] = $bill->{'提案單位/提案委員'};
-            $related_bill['non_first_proposers'] = self::parseNonFirstProposers($bill);
-            $related_bill['bill_no'] = (property_exists($bill, '提案編號')) ? $bill->提案編號 : $bill->billNo;
-            $related_bill['initial_date'] = self::getInitialDate($bill);
+            $related_bill = new stdClass();
+            $related_bill->{'bill_idx'} = $bill_idx;
+            $related_bill->{'bill_name'} = self::parseBillName($bill);
+            $related_bill->{'version_name'} = $bill->{'提案單位/提案委員'};
+            $related_bill->{'non_first_proposers'} = self::parseNonFirstProposers($bill);
+            $related_bill->{'bill_no'} = (property_exists($bill, '提案編號')) ? $bill->提案編號 : $bill->billNo;
+            $related_bill->{'initial_date'} = self::getInitialDate($bill);
             $related_bills[$bill_idx] = $related_bill;
         }
         $diff_result = self::prettyHtmls($diff);
-        return $diff_result;
+        return [$related_bills, $diff_result];
     }
 
     public static function prettyHtmls($contents)
