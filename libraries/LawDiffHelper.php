@@ -61,7 +61,7 @@ class LawDiffHelper
             $related_bills[$bill_idx] = $related_bill;
         }
         $diff_result = self::prettyHtmls($diff);
-        return [$related_bills, $diff_result];
+        return [$related_bills, $diff_result, $bill_n_law_idx_mapping];
     }
 
     public static function prettyHtmls($contents)
