@@ -39,3 +39,58 @@
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="col-lg-2 law-idx-list">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">條文索引</h6>
+      </div>
+      <div class="card-body">
+        <?php foreach ($diff_result as $law_idx => $diff): ?>
+          <a class="law-idx <?= $law_idx ?>" href="#<?= $law_idx ?>"><?= $law_idx ?></a>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-10">
+    <?php foreach ($diff_result as $law_idx => $diff): ?>
+      <div id="<?= $law_idx ?>" class="diff-comparison <?= $law_idx ?> card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary"><?= $law_idx ?></h6>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-sm nowrap">
+            <thead>
+              <th style="width: 20%">版本名稱</th>
+              <th>條文內容</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>現行條文</td>
+                <td>
+                  <?php if (is_null($diff->current)): ?>
+                    本條新增無現行版本
+                  <?php else: ?>
+                    <?= $diff->current ?>
+                  <?php endif; ?>
+                </td>
+              </tr>
+              <?php foreach ($related_bills as $bill_idx => $bill): ?>
+                <tr class="diff <?= $bill_idx ?>">
+                  <td><?= $bill->version_name ?></td>
+                  <td>
+                    <?php if (property_exists($diff->commits, $bill_idx)): ?>
+                      <?= $diff->commits->{$bill_idx} ?>
+                    <?php else: ?>
+                      無
+                    <?php endif; ?>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
