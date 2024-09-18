@@ -46,7 +46,6 @@ function toggleDisplayLawDiff(law_indexes, bill_indexes) {
     $('tr.diff').each(function() {
         ele = $(this);
         current_display = ele.css('display');
-        console.log(current_display);
         bill_index = ele.attr('class').split(' ')[1];
         next_display = (bill_indexes.includes(bill_index)) ? 'table-row' : 'none';
         if (current_display != next_display) {

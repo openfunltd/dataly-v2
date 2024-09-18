@@ -26,7 +26,7 @@
           <?php foreach ($related_bills as $related_bill): ?>
               <tr>
                 <td class="text-center">
-                  <input type="checkbox" value="{{ $related_bill['bill_idx'] }}">
+                  <input type="checkbox" value="<?= $related_bill->bill_idx ?>">
                 </td>
               <td><?= $related_bill->bill_name ?></td>
               <td><?= $related_bill->version_name ?></td>
@@ -48,7 +48,12 @@
       </div>
       <div class="card-body">
         <?php foreach ($diff_result as $law_idx => $diff): ?>
-          <a class="law-idx <?= $law_idx ?>" href="#<?= $law_idx ?>"><?= $law_idx ?></a>
+          <a class="law-idx <?= $law_idx ?>"
+            href="#<?= $law_idx ?>"
+            style="display: block;"
+          >
+            <?= $law_idx ?>
+          </a>
         <?php endforeach; ?>
       </div>
     </div>
