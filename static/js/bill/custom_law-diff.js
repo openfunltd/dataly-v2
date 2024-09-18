@@ -1,4 +1,117 @@
 window.onload = function(){
+  //generate text-diff
+  let diffResult = {};
+  for (const [law, comparison] of Object.entries(diffData)) {
+    diffResult[law] = {};
+    let current = comparison['current'];
+    let commits = comparison['commits'];
+    if (current === null || current == '') {
+      diffResult[law].current = current;
+      diffResult[law].commits = comparison['commits'];
+      for (const [bill_idx, commit] of Object.entries(commits)) {
+        diffResult[law].commits[bill_idx] = commit.replaceAll("\n", "<br>");
+      }
+      continue;
+    }
+    diffResult[law].current = current.replaceAll("\n", "<br>");
+    diffResult[law].commits = {};
+    for (const [bill_idx, commit] of Object.entries(commits)) {
+      const diff = new Diff();
+      const textDiff = diff.main(current, commit);
+      const diff_in_html = diff.prettyHtml(textDiff);
+      diffResult[law].commits[bill_idx] = diff_in_html;
+    }
+  }
+
+  //render law-idx-list
+  $.each(diffResult, function(lawIdx, diff) {
+    var anchor = $('<a>', {
+      class: 'law-idx ' + lawIdx,
+      href: '#' + lawIdx,
+      text: lawIdx,
+      css: {
+        display: 'block',
+      }
+    });
+    $('.law-idx-a-list').append(anchor);
+  });
+
+  //render diff-tables
+  $.each(diffResult, function(lawIdx, diff) {
+    //main div
+    var diffTableDiv = $('<div>', {
+      id: lawIdx,
+      class: 'diff-comparison ' + lawIdx + ' card shadow mb-4',
+    });
+    $('.diff-tables').append(diffTableDiv);
+
+    //card-header-div
+    var diffTableHeaderDiv = $('<div>', {
+      class: 'card-header py-3'
+    }).append(
+      $('<h6>', {
+        class: 'm-0 font-weight-bold text-primary',
+        text: lawIdx
+      })
+    );
+    diffTableDiv.append(diffTableHeaderDiv);
+
+    //card-body-div
+    var diffTableBodyDiv = $('<div>', {
+      class: 'card-body'
+    });
+
+    //card-body-table
+    var diffTable = $('<table>', {
+      class: 'table table-bordered table-sm nowrap'
+    });
+    diffTableBodyDiv.append(diffTable);
+    diffTableDiv.append(diffTableBodyDiv);
+
+    //thead
+    var diffTableHead = $('<thead>').append(
+      $('<th>', {
+          text: '版本名稱',
+          css: { width: '20%' }
+      }),
+      $('<th>', {
+          text: '條文內容'
+      })
+    );
+    diffTable.append(diffTableHead);
+
+    //tbody
+    var diffTableBody = $('<tbody>');
+
+    //current
+    var currentText = diff.current;
+    var currentTr = $('<tr>').append(
+      $('<td>', {
+        text: '現行條文'
+      }),
+      $('<td>', {
+        html: currentText || '本條新增無現行版本'
+      }),
+    );
+    diffTableBody.append(currentTr);
+    diffTable.append(diffTableBody);
+
+    //diff of relatedBills
+    $.each(relatedBills, function(billIdx, bill) {
+      diffBillTr = $('<tr>', {
+        class: 'diff ' + billIdx
+      }).append(
+        $('<td>', {
+          text: bill.version_name
+        }),
+        $('<td>', {
+          html: diff.commits[billIdx] || '無'
+        }),
+      )
+      diffTableBody.append(diffBillTr);
+    });
+  });
+
   $('input[type=checkbox]').on("change", function() {
       const bill_indexes = $('input[type=checkbox]:checked').map(function() {
           return $(this).val();

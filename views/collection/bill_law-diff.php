@@ -4,7 +4,7 @@
         return;
     }
     $bill = $this->data->data;
-    [$related_bills, $diff_result, $bill_n_law_idx_mapping] = LawDiffHelper::lawDiff($bill);
+    [$related_bills, $diff, $bill_n_law_idx_mapping] = LawDiffHelper::lawDiff($bill);
 ?>
 <link href="/static/css/bill/custom_law-diff.css" rel="stylesheet">
 <div class="card shadow mb-4">
@@ -46,61 +46,18 @@
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">條文索引</h6>
       </div>
-      <div class="card-body">
-        <?php foreach ($diff_result as $law_idx => $diff): ?>
-          <a class="law-idx <?= $law_idx ?>"
-            href="#<?= $law_idx ?>"
-            style="display: block;"
-          >
-            <?= $law_idx ?>
-          </a>
-        <?php endforeach; ?>
-      </div>
+      <div class="card-body law-idx-a-list"></div>
     </div>
   </div>
-  <div class="col-lg-10">
-    <?php foreach ($diff_result as $law_idx => $diff): ?>
-      <div id="<?= $law_idx ?>" class="diff-comparison <?= $law_idx ?> card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary"><?= $law_idx ?></h6>
-        </div>
-        <div class="card-body">
-          <table class="table table-bordered table-sm nowrap">
-            <thead>
-              <th style="width: 20%">版本名稱</th>
-              <th>條文內容</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>現行條文</td>
-                <td>
-                  <?php if (is_null($diff->current)): ?>
-                    本條新增無現行版本
-                  <?php else: ?>
-                    <?= $diff->current ?>
-                  <?php endif; ?>
-                </td>
-              </tr>
-              <?php foreach ($related_bills as $bill_idx => $bill): ?>
-                <tr class="diff <?= $bill_idx ?>">
-                  <td><?= $bill->version_name ?></td>
-                  <td>
-                    <?php if (property_exists($diff->commits, $bill_idx)): ?>
-                      <?= $diff->commits->{$bill_idx} ?>
-                    <?php else: ?>
-                      無
-                    <?php endif; ?>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    <?php endforeach; ?>
-  </div>
+  <div class="col-lg-10 diff-tables"></div>
 </div>
 <script>
   const bill_n_law_idx_mapping = <?= json_encode($bill_n_law_idx_mapping) ?>;
+  const diffData = <?= json_encode($diff) ?>;
+  const relatedBills = <?= json_encode($related_bills) ?>;
+</script>
+<script type="module">
+    import Diff from 'https://cdn.jsdelivr.net/npm/text-diff@1.0.1/+esm';
+    window.Diff = Diff;
 </script>
 <script src="/static/js/bill/custom_law-diff.js"></script>

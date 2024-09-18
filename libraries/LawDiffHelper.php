@@ -60,8 +60,7 @@ class LawDiffHelper
             $related_bill->{'initial_date'} = self::getInitialDate($bill);
             $related_bills[$bill_idx] = $related_bill;
         }
-        $diff_result = self::prettyHtmls($diff);
-        return [$related_bills, $diff_result, $bill_n_law_idx_mapping];
+        return [$related_bills, $diff, $bill_n_law_idx_mapping];
     }
 
     public static function prettyHtmls($contents)
