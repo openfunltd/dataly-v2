@@ -63,29 +63,6 @@ class LawDiffHelper
         return [$related_bills, $diff, $bill_n_law_idx_mapping];
     }
 
-    public static function prettyHtmls($contents)
-    {
-        $input = tempnam('/tmp/', 'law-diff-');
-        $outcome = file_put_contents($input, json_encode($contents));
-        $output = tempnam('/tmp/', 'law-diff-');
-
-        $cmd = sprintf("env NODE_PATH=%s node %s %s %s",
-            escapeshellarg(getenv('BASE_PATH') . '/node_modules'),
-            escapeshellarg(getenv('BASE_PATH') . '/scripts/text_diff_worker.js'),
-            escapeshellarg($input),
-            escapeshellarg($output)
-        );
-
-        system($cmd, $ret);
-
-        $result = file_get_contents($output);
-        $result = json_decode($result);
-
-        unlink($input);
-        unlink($output);
-        return $result;
-    } 
-
     private static function getLawIndex($commit)
     {
         if (property_exists($commit, '現行') && $commit->現行 != '') {
