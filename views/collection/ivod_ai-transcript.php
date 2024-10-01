@@ -27,6 +27,7 @@
     }
     $subtitles = json_encode($this->data->data->transcript->whisperx);
 ?>
+<link rel="stylesheet" href="/static/css/ivod/custom_ai-transcript.css">
 <div id="ai-transcript" class="card shadow mb-4">
     <div class="card-header py-3">
         <h1 class="h3 mb-0 text-gray-800">

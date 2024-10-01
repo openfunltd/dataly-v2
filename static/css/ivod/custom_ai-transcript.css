@@ -1,0 +1,10 @@
+tr.selected {
+    background-color: #0275d8;
+    color: white;
+}
+
+tr.selected:hover {
+    background-color: #0275d8 !important;
+    color: white !important;
+    cursor: default; /* Optionally, set cursor to default */
+}
