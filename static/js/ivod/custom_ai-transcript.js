@@ -22,7 +22,7 @@ window.onload = function(){
   d_g = $('#s-0').offset().top;
   video.addEventListener("timeupdate", function(event) {
     time = this.currentTime;
-    if (Math.abs(timeCache - time) < 0.5) {
+    if (Math.abs(timeCache - time) < 0.1) {
       return;
     }
     timeCache = time;
