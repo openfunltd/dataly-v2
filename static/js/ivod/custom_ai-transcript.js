@@ -1,6 +1,5 @@
 window.onload = function(){
   const table = $('#subtitleTable').DataTable({
-    select: 'single',
     ordering: false,
     scrollCollapse: true,
     scrollY: '300px',
@@ -8,11 +7,15 @@ window.onload = function(){
     fixedHeader: true,
   });
 
-  table.on('select', function (e, dt, type, index) {
-    data = table.row(index).data();
-    video.currentTime = timeStringToSeconds(data[0]);
-    video.play();
-    video.focus();
+  $('tr[id^="s-"]').on('click', function(event) {
+    if (window.getSelection().toString().length === 0) {
+      startTime = $(this).find('td:first').text();
+      video.currentTime = timeStringToSeconds(startTime);
+      video.play();
+      video.focus();
+    } else {
+      event.preventDefault();
+    }
   });
 
   timeCache = 0;
@@ -36,9 +39,9 @@ window.onload = function(){
       selectedTr.removeClass('selected');
     }
     desiredTr.addClass('selected');
-    scroll_pos = $('.dt-scroll-body').scrollTop();
+    scroll_pos = $('.dataTables_scrollBody').scrollTop();
     d_x = desiredTr.offset().top;
-    $('.dt-scroll-body').scrollTop(scroll_pos + d_x - d_g);
+    $('.dataTables_scrollBody').scrollTop(scroll_pos + d_x - d_g);
   });
 };
 
