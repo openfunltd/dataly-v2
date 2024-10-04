@@ -1,0 +1,18 @@
+.law-idx-list {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 12rem);
+    overflow-y: auto;
+}
+
+#content-wrapper {
+    overflow: visible !important;
+}
+
+del {
+  background-color: #fbb;
+}
+
+ins {
+  background-color: #d4fcbc;
+}

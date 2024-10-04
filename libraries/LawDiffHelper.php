@@ -2,6 +2,26 @@
 
 class LawDiffHelper
 {
+    public static function lawDiff($bill)
+    {
+        //對照表會有沒有 rows 的狀況 bill_SN: 20委11005501
+        if (! property_exists($bill->對照表[0], 'rows')) {
+            $commits = $bill->對照表[1]->rows;
+        } else {
+            $commits = $bill->對照表[0]->rows;
+        }
+
+        $diff = new stdClass();
+        foreach ($commits as $commit) {
+            $law_idx = self::getLawIndex($commit);
+            $isNewLawIndex = (property_exists($commit, '現行') && $commit->現行 != '');
+            $diff->{$law_idx} = new stdClass();
+            $diff->{$law_idx}->current = ($isNewLawIndex) ? $commit->現行 : null;
+            $diff->{$law_idx}->commit = (property_exists($commit, '修正')) ? $commit->修正 : $commit->增訂;
+        }
+        return $diff;
+    }
+
     public static function relatedBillsLawDiff($bill)
     {
         $bill_no = $bill->議案編號;
