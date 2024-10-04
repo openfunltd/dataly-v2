@@ -45,7 +45,6 @@ class TypeHelper
                     '議案狀態',
                 ],
                 'item_features' => [
-                    'law-diff' => '法律對照表',
                     'related-bills-law-diff' => '關聯議案法律對照表',
                 ],
             ],

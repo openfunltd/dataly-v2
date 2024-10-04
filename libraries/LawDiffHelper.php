@@ -2,7 +2,7 @@
 
 class LawDiffHelper
 {
-    public static function lawDiff($bill)
+    public static function relatedBillsLawDiff($bill)
     {
         $bill_no = $bill->議案編號;
         $bills = LyAPI::apiQuery(
