@@ -46,6 +46,7 @@ class TypeHelper
                 ],
                 'item_features' => [
                     'law-diff' => '法律對照表',
+                    'related-bills-law-diff' => '關聯議案法律對照表',
                 ],
             ],
             'legislator' => [
