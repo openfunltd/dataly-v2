@@ -4,9 +4,39 @@
         return;
     }
     $bill = $this->data->data;
+
+    foreach ($bill->相關附件 as $attached) {
+        if ($attached->名稱 == '關係文書PDF') {
+            $related_pdf_url = $attached->網址;
+        }
+        if ($attached->名稱 == '關係文書DOC') {
+            $related_doc_url = $attached->網址;
+        }
+    }
+
     $diff = LawDiffHelper::lawDiff($bill);
 ?>
 <link href="/static/css/bill/custom_law-diff.css" rel="stylesheet">
+<?php if (isset($related_pdf_url)): ?>
+  <div class="mt-2 mb-2">
+    <a class="btn btn-primary btn-icon-split" href="<?= $this->escape($related_pdf_url) ?>" target="_blank">
+      <span class="icon text-white-50">
+        <i class="fa fa-external-link"></i>
+      </span>
+      <span class="text">關係文書(PDF)</span>
+    </a>
+  </div>
+<?php endif; ?>
+<?php if (isset($related_doc_url)): ?>
+  <div class="mt-2 mb-2">
+    <a class="btn btn-primary btn-icon-split" href="<?= $this->escape($related_doc_url) ?>" target="_blank">
+      <span class="icon text-white-50">
+        <i class="fa fa-external-link"></i>
+      </span>
+      <span class="text">關係文書(WORD)</span>
+    </a>
+  </div>
+<?php endif; ?>
 <div class="row">
   <div class="col-lg-2 law-idx-list">
     <div class="card shadow mb-4">
