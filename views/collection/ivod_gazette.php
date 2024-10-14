@@ -5,6 +5,7 @@
     }
     $MP_name = $this->escape($this->data->data->委員名稱);
     $meet_title = $this->escape($this->data->data->會議資料->標題);
+    $meet_subjects = Ivod::getSubjects($this->data->data->會議名稱);
     $gazette_transcript = [];
     foreach ($this->data->data->gazette->blocks as $block) {
         foreach ($block as $text) {
@@ -18,6 +19,7 @@
         <h1 class="h3 mb-0 text-gray-800">
             <?= $MP_name ?> @ <?= $meet_title ?>
         </h1>
+        <?= implode('<br>', array_map([$this, 'escape'], $meet_subjects)) ?>
     </div>
     <div class="card-body">
         <div class="row">
