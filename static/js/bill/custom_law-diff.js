@@ -4,6 +4,7 @@ window.onload = function(){
   for (const [law, comparison] of Object.entries(diffData)) {
     let current = comparison['current'];
     let commit = comparison['commit'];
+    let reason = comparison['reason'];
     diffResult[law] = {};
     if (current === null || current == '') {
       diffResult[law].current = null;
@@ -15,6 +16,7 @@ window.onload = function(){
     const diff_in_html = diff.prettyHtml(textDiff);
     diffResult[law].current = current.replaceAll("\n", "<br>");
     diffResult[law].commit = diff_in_html.replaceAll("\n", "<br>");
+    diffResult[law].reason = reason;
   }
 
   //render law-idx-list
@@ -88,16 +90,27 @@ window.onload = function(){
       }),
     );
 
+    //reason
+    var reasonText = diff.reason;
+    var reasonDiv = $('<div>', {
+      class: 'alert alert-warning mt-3',
+      text: '立法理由：' + reasonText,
+    });
+
     //commit
     var commitText = diff.commit;
-    console.log(commitText);
+    var commitDiv = $('<div>', {
+      html: commitText,
+    });
+    var commitTd = $('<td>').append(
+      commitDiv,
+      reasonDiv,
+    );
     var commitTr = $('<tr>').append(
       $('<td>', {
         text: (currentText === null) ? '增訂條文' : '修正條文',
       }),
-      $('<td>', {
-        html: commitText,
-      }),
+      commitTd,
     );
 
     diffTableBody.append(currentTr);

@@ -18,6 +18,7 @@ class LawDiffHelper
             $diff->{$law_idx} = new stdClass();
             $diff->{$law_idx}->current = ($isNewLawIndex) ? $commit->現行 : null;
             $diff->{$law_idx}->commit = (property_exists($commit, '修正')) ? $commit->修正 : $commit->增訂;
+            $diff->{$law_idx}->reason = (property_exists($commit, '說明')) ? $commit->說明 : null;
         }
         return $diff;
     }
