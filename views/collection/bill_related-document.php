@@ -16,16 +16,6 @@
         $endorsers = implode('、', $bill->連署人);
     }
 
-    //相關附件
-    $attachment_html = '';
-    $attachments = [];
-    if (property_exists($bill, '相關附件') and count($bill->相關附件) > 0) {
-        foreach ($bill->相關附件 as $attachment) {
-            $attachments[] = sprintf('<a href="%s" target="_blank">%s</a>', $attachment->網址, $attachment->名稱);
-        }
-    }
-    $attachment_html = implode('<br>', $attachments);
-
     $diff = null;
     if (property_exists($bill, '對照表')) {
         $diff = LawDiffHelper::lawDiff($bill);
@@ -77,10 +67,15 @@
             <td><?= $this->escape($bill->案由) ?></td>
           </tr>
         <?php } ?>
-        <?php if ($attachment_html != '') { ?>
+        <?php if (property_exists($bill, '相關附件') and count($bill->相關附件) > 0) { ?>
+          <?php foreach ($bill->相關附件 as $idx => $attach) {
+            $attaches[] = sprintf('<a href="%s" target="_blank">%s</a>', $this->escape($attach->網址), $this->escape($attach->名稱));
+          } ?>
           <tr>
             <td>相關附件</td>
-            <td><?= $this->escape($attachment_html) ?></td>
+            <td>
+              <?= implode("<br>", $attaches) ?>
+            </td>
           </tr>
         <?php } ?>
         <tr>
