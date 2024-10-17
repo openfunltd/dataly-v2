@@ -1,11 +1,8 @@
 <?php
-    if (!property_exists($this->data->data, '對照表')) {
-        echo '無法律對照表';
-        return;
-    }
     $bill = $this->data->data;
 
     //提案人
+    $proposers = '';
     if ($bill->提案來源 != '委員提案') {
         $proposers = $bill->{'提案單位/提案委員'};
     } else {
@@ -29,7 +26,10 @@
     }
     $attachment_html = implode('<br>', $attachments);
 
-    $diff = LawDiffHelper::lawDiff($bill);
+    $diff = null;
+    if (property_exists($bill, '對照表')) {
+        $diff = LawDiffHelper::lawDiff($bill);
+    }
 ?>
 <link href="/static/css/bill/custom_law-diff.css" rel="stylesheet">
 <div class="card shadow mt-3 mb-3">
@@ -44,10 +44,13 @@
           <td style="width: 10%;">提案編號</td>
           <td><?= $this->escape($this->data->id[0]) ?></td>
         </tr>
+        <?php if (property_exists($bill, '字號')) { ?>
         <tr>
           <td>字號</td>
           <td><?= $this->escape($bill->字號) . "（" . $this->escape($bill->提案編號) . "）" ?></td>
         </tr>
+        <?php } ?>
+        <?php if (property_exists($bill, '會議代碼:str')) { ?>
         <tr>
           <td>關聯會議</td>
           <td>
@@ -55,10 +58,13 @@
             （<a href="/collection/item/meet/<?= $this->escape($bill->會議代碼) ?>">連結</a>）
           </td>
         </tr>
+        <?php } ?>
+        <?php if ($proposers != '') { ?>
         <tr>
           <td>提案人</td>
           <td><?= $this->escape($proposers) ?></td>
         </tr>
+        <?php } ?>
         <?php if ($endorsers != '') { ?>
           <tr>
             <td>連署人</td>
@@ -74,13 +80,27 @@
         <?php if ($attachment_html != '') { ?>
           <tr>
             <td>相關附件</td>
-            <td><?= $attachment_html ?></td>
+            <td><?= $this->escape($attachment_html) ?></td>
           </tr>
         <?php } ?>
+        <tr>
+          <td>原始資料</td>
+          <td>
+            <a href="<?= $this->escape($bill->url) ?>" target="blank">議事暨公報資訊網</a>
+          </td>
+        </tr>
       </table>
     </div>
   </div>
 </div>
+<?php if (is_null($diff)) { ?>
+<div class="card border-left-danger">
+  <div class="card-body">
+    無法律對照表
+  </div>
+</div>
+<?php } ?>
+<?php if (isset($diff)) { ?>
 <div class="row">
   <div class="col-lg-2 law-idx-list">
     <div class="card shadow mb-4">
@@ -100,3 +120,4 @@
     window.Diff = Diff;
 </script>
 <script src="/static/js/bill/custom_law-diff.js"></script>
+<?php } ?>
