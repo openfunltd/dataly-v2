@@ -9,6 +9,7 @@ window.onload = function(){
     if (current === null || current == '') {
       diffResult[law].current = null;
       diffResult[law].commit = commit;
+      diffResult[law].reason = reason;
       continue;
     }
     const diff = new Diff();
