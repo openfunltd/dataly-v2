@@ -1,21 +1,20 @@
 <?php
     $bill = $this->data->data;
 
+    //retrieve data
+    $bill_source = $bill->提案來源 ?? '';
+    $bill_source_title = $bill->{'提案單位/提案委員'} ?? '';
+    $proposers = $bill->提案人 ?? [];
+    $endorsers = implode('、', $bill->連署人 ?? []);
+
     //提案人
-    $proposers = '';
-    if ($bill->提案來源 != '委員提案') {
-        $proposers = $bill->{'提案單位/提案委員'};
+    if ($bill_source != '委員提案' or empty($proposers)) {
+        $proposers = $bill_source_title;
     } else {
-        $proposers = $bill->提案人;
         $proposers = implode('、', $proposers);
     }
 
-    //連署人
-    $endorsers = '';
-    if (property_exists($bill, '連署人')) {
-        $endorsers = implode('、', $bill->連署人);
-    }
-
+    //對照表
     $diff = null;
     if (property_exists($bill, '對照表')) {
         $diff = LawDiffHelper::lawDiff($bill);
@@ -49,13 +48,13 @@
           </td>
         </tr>
         <?php } ?>
-        <?php if ($proposers != '') { ?>
+        <?php if (!empty($proposers)) { ?>
         <tr>
           <td>提案人</td>
           <td><?= $this->escape($proposers) ?></td>
         </tr>
         <?php } ?>
-        <?php if ($endorsers != '') { ?>
+        <?php if (!empty($endorsers)) { ?>
           <tr>
             <td>連署人</td>
             <td><?= $this->escape($endorsers) ?></td>
