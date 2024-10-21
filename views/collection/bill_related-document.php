@@ -68,7 +68,7 @@
         <?php } ?>
         <?php if (property_exists($bill, '相關附件') and count($bill->相關附件) > 0) { ?>
           <?php foreach ($bill->相關附件 as $idx => $attach) {
-            $attach_url = (mb_strpos($attach->網址, 'https')) ? $attach->網址 : 'https://ppg.ly.gov.tw' . $attach->網址;
+            $attach_url = (mb_strpos($attach->網址, 'https') === 0) ? $attach->網址 : 'https://ppg.ly.gov.tw' . $attach->網址;
             $attaches[] = sprintf('<a href="%s" target="_blank">%s</a>', $this->escape($attach_url), $this->escape($attach->名稱));
           } ?>
           <tr>
