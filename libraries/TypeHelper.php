@@ -13,7 +13,7 @@ class TypeHelper
                     '會期',
                     '會議代碼',
                     '日期',
-                    '會議標題',
+                    'name',
                 ],
                 'default_aggs' => [
                     '屆',
