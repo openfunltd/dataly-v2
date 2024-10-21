@@ -43,13 +43,13 @@ $interpellation_count = LYAPI::apiQuery(
             <?php if ($ivod_count > 0) { ?>
             <tr>
                 <td>IVod</td>
-                <td><a href="/collection/table/ivod?filter=<?= urlencode('會議資料.會議代碼') ?>:<?= urlencode($this->data->data->{'會議代碼'}) ?>"><?= $ivod_count ?> 筆</a></td>
+                <td><a href="/collection/list/ivod?filter=<?= urlencode('會議資料.會議代碼') ?>:<?= urlencode($this->data->data->{'會議代碼'}) ?>"><?= $ivod_count ?> 筆</a></td>
             </tr>
             <?php } ?>
             <?php if ($interpellation_count > 0) { ?>
             <tr>
                 <td>質詢</td>
-                <td><a href="/collection/table/interpellation?filter=<?= urlencode('會議資料.會議代碼') ?>:<?= urlencode($this->data->data->{'會議代碼'}) ?>"><?= $interpellation_count ?> 筆</a></td>
+                <td><a href="/collection/list/interpellation?filter=<?= urlencode('會議資料.會議代碼') ?>:<?= urlencode($this->data->data->{'會議代碼'}) ?>"><?= $interpellation_count ?> 筆</a></td>
             </tr>
             <?php } ?>
 
