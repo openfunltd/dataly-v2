@@ -2,7 +2,7 @@
 $config = TypeHelper::getTypeConfig()[$this->type];
 ?>
 <?php $this->yield_start('content') ?>
-<h1><?= $this->escape($config['name'] . ' / ' . $this->id) ?></h1>
+<h1 class="mt-4 mb-3"><?= $this->escape($config['name'] . ' / ' . $this->id) ?></h1>
 <ul class="nav nav-tabs">
     <?php foreach ($this->features as $ftab => $fname) { ?>
     <li class="nav-item">
