@@ -4,9 +4,9 @@
         return;
     }
     $bill = $this->data->data;
-    [$related_bills, $diff, $bill_n_law_idx_mapping] = LawDiffHelper::lawDiff($bill);
+    [$related_bills, $diff, $bill_n_law_idx_mapping] = LawDiffHelper::relatedBillsLawDiff($bill);
 ?>
-<link href="/static/css/bill/custom_law-diff.css" rel="stylesheet">
+<link href="/static/css/bill/custom_related-bills-law-diff.css" rel="stylesheet">
 <div class="card shadow mb-4">
   <div class="card-header py-3">
     <h6 class="m-0 font-weight-bold text-primary">關聯提案</h6>
@@ -60,4 +60,4 @@
     import Diff from 'https://cdn.jsdelivr.net/npm/text-diff@1.0.1/+esm';
     window.Diff = Diff;
 </script>
-<script src="/static/js/bill/custom_law-diff.js"></script>
+<script src="/static/js/bill/custom_related-bills-law-diff.js"></script>

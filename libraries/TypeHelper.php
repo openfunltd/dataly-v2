@@ -45,6 +45,7 @@ class TypeHelper
                     '議案狀態',
                 ],
                 'item_features' => [
+                    'related-document' => '關係文書',
                     'law-diff' => '法律對照表',
                 ],
             ],
