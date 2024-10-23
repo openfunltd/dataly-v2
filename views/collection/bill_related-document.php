@@ -87,7 +87,7 @@
 </div>
 <?php } ?>
 <?php if (isset($diff)) { ?>
-<h2 class="ml-2 mt-4 mb-3 h5"><?= $law_diff_title ?></h2>
+<h2 id="law-diff" class="ml-2 mt-4 mb-3 h5"><?= $law_diff_title ?></h2>
 <div class="row">
   <div class="col-lg-2 law-idx-list">
     <div class="card shadow mb-4">
