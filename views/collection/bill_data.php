@@ -142,7 +142,7 @@
               <th class="text-center">字號</td>
               <th class="text-center">提案單位/提案委員</td>
               <th class="text-center">議案狀態</td>
-              <th class="text-center">議案狀態</td>
+              <th class="text-center">議案名稱</td>
             </tr>
           </thead>
           <tbody>
@@ -154,9 +154,9 @@
                     <i class="fas fa-fw fa-eye"></i>
                   </a>
                 </td>
-                <td><?= $this->escape($related_bill->提案編號 ?? '') ?></td>
-                <td><?= $this->escape($related_bill->{'提案單位/提案委員'} ?? '') ?></td>
-                <td><?= $this->escape($related_bill->議案狀態 ?? '') ?></td>
+                <td class="text-center"><?= $this->escape($related_bill->提案編號 ?? '') ?></td>
+                <td class="text-center"><?= $this->escape($related_bill->{'提案單位/提案委員'} ?? '') ?></td>
+                <td class="text-center"><?= $this->escape($related_bill->議案狀態 ?? '') ?></td>
                 <td><?= $this->escape($related_bill->議案名稱 ?? '') ?></td>
               </tr>
             <?php } ?>
