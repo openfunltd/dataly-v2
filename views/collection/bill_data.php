@@ -9,6 +9,9 @@
     $attaches = $bill->相關附件 ?? [];
     $source_url = $bill->url ?? '';
 
+    //議案流程
+    $bill_progress = $bill->議案流程 ?? [];
+
     //關連議案 ppg 版
     $related_bills_ppg = $bill->關連議案 ?? [];
 
@@ -86,6 +89,44 @@
     </div>
   </div>
 </div>
+<h2 id="related-bills-ppg" class="ml-2 mt-4 mb-3 h5">議案流程</h2>
+<?php if (empty($bill_progress)) { ?>
+  <div class="mt-2 card border-left-danger">
+    <div class="card-body">
+      無議案流程
+    </div>
+  </div>
+<?php } ?>
+<?php if (!empty($bill_progress)) { ?>
+  <div class="card shadow mt-3 mb-3">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+          <thead>
+            <tr>
+              <th class="text-center">日期</th>
+              <th class="text-center">狀態</th>
+              <th class="text-center">院會/委員會</th>
+              <th class="text-center">會期</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($bill_progress as $related_meet) {
+                $related_meet_dates = $related_meet->日期 ?? [];
+            ?>
+              <tr>
+                <td class="text-center align-middle"><?= implode('<br>', array_map([$this, 'escape'], $related_meet_dates)) ?></td>
+                <td class="text-center align-middle"><?= $this->escape($related_meet->狀態 ?? '') ?></td>
+                <td class="text-center align-middle"><?= $this->escape($related_meet->{'院會/委員會'} ?? '') ?></td>
+                <td class="text-center align-middle"><?= $this->escape($related_meet->會期 ?? '') ?></td>
+              </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<?php } ?>
 <h2 id="related-bills-ppg" class="ml-2 mt-4 mb-3 h5">關連議案 - 立法院議事暨公報資訊網版</h2>
 <?php if (empty($related_bills_ppg)) { ?>
   <div class="mt-2 card border-left-danger">
