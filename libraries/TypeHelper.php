@@ -68,6 +68,9 @@ class TypeHelper
                     'table' => '列表',
                     'list' => '立委列表',
                 ],
+                'item_features' => [
+                    'data' => '立委資料',
+                ],
             ],
             'committee' => [
                 'name' => '委員會',
