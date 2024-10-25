@@ -8,9 +8,9 @@
     $wiki_area_url = 'https://zh.wikipedia.org/zh-tw/';
     if (mb_strpos($election_area, '不分區') !== false) {
         $wiki_area_url .= '全國不分區及僑居國外國民立法委員選舉區';
-    } else if (mb_strpos($election_area, '山地原住民') !== false) {
+    } else if (mb_strpos($election_area, '山地') !== false) {
         $wiki_area_url .= '山地原住民選舉區';
-    } else if (mb_strpos($election_area, '平地原住民') !== false) {
+    } else if (mb_strpos($election_area, '平地') !== false) {
         $wiki_area_url .= '平地原住民選舉區';
     } else if (mb_strpos($election_area, '選舉區') !== false) {
         $zh_nums = [
