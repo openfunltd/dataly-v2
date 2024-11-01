@@ -21,6 +21,7 @@ class TypeHelper
                     '會議種類',
                 ],
                 'item_features' => [
+                    'data' => '會議資料',
                     'info' => '資訊',
                     'opendata' => '開放資料',
                     'proceedings' => '議事錄',
