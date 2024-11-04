@@ -60,22 +60,28 @@
   .table td, .table th {
     white-space: nowrap;
   }
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
 </style>
 <div class="card shadow mt-3 mb-3">
   <div class="card-body">
     <div class="table-responsive">
       <table class="table">
         <tr>
-          <td style="width: 15%">會議名稱</td>
+          <td style="width: 15%" class="text-center align-middle">會議名稱</td>
           <td><?= $this->escape($meet->name ?? '') ?></td>
         </tr>
         <tr>
-          <td>會議時間/地點</td>
+          <td class="text-center align-middle">會議時間/地點</td>
           <td><?= implode('<br>', array_map([$this,'escape'], $date_n_locations)) ?></td>
         </tr>
         <?php if (!$is_plenary) { ?>
           <tr>
-            <td>召集人</td>
+            <td class="text-center align-middle">召集人</td>
             <?php if (isset($convener_str)) { ?>
               <td><?= $this->escape($convener_str) ?></td>
             <?php } ?>
@@ -87,20 +93,44 @@
         <?php foreach ($meet_subjects as $idx => $subject_obj) { ?>
           <tr>
             <?php if ($idx === 0) { ?>
-              <td rowspan="<?= count($meet_subjects) ?>">事由</td>
+              <td class="text-center align-middle" rowspan="<?= count($meet_subjects) ?>">事由</td>
             <?php } ?>
             <?php if (count($meet_subjects) === 1) { ?>
-              <td><?= nl2br($this->escape($subject_obj->subject)) ?></td>
+              <td><p class="meet-reason truncate-2"><?= nl2br($this->escape($subject_obj->subject)) ?></p></td>
             <?php } else { ?>
               <td>
-                <?= $this->escape(implode('、', $subject_obj->date)) ?>
-                <br>
-                <?= nl2br($this->escape($subject_obj->subject)) ?>
+                <p class="meet-reason truncate-2">
+                  <?= $this->escape(implode('、', $subject_obj->date)) ?>
+                  <br>
+                  <?= nl2br($this->escape($subject_obj->subject)) ?>
+                </p>
               </td>
             <?php } ?>
           </tr>
         <?php } ?>
+        <tr>
+          <td class="text-center align-middle">原始資料連結</td>
+          <td>
+            <?php foreach ($this->data->data->{'會議資料'} as $data) { ?>
+              <p class="m-0">
+                <a href="<?= $this->escape($data->ppg_url) ?>" target="_blank">
+                  立法院議事暨公報資訊網：會議 <?= $this->escape($data->{'日期'}) ?>
+                </a>
+              </p>
+            <?php } ?>
+          </td>
+        </tr>
       </table>
     </div>
   </div>
 </div>
+<script>
+  window.onload = function() {
+    $('.meet-reason').click(function(){
+      selectionLength = window.getSelection().toString().length;
+      if (selectionLength === 0) {
+        $(this).toggleClass('truncate-2');
+      }
+    });
+  }
+</script>
