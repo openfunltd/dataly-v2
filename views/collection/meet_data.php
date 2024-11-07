@@ -55,6 +55,25 @@
             }
         }
     }
+
+    //ivods
+    $ivods = LYAPI::apiQuery(
+        sprintf('/meet/%s/ivods', urlencode($this->data->id[0])),
+        sprintf("取得關連的 IVOD 影片資料", $this->data->id[0])
+    );
+    $ivods = $ivods->ivods ?? [];
+    $clip_ivods = array_filter($ivods, function($ivod) {
+        return $ivod->影片種類 == 'Clip';
+    });
+    $full_ivods = array_filter($ivods, function($ivod) {
+        return $ivod->影片種類 == 'Full';
+    });
+    function ivodStartTimeSort($ivodA, $ivodB) {
+        return $ivodA->開始時間 <=> $ivodB->開始時間;
+    }
+    usort($clip_ivods, 'ivodStartTimeSort');
+    usort($full_ivods, 'ivodStartTimeSort');
+    $ivods = array_merge($full_ivods, $clip_ivods);
 ?>
 <style>
   .table td, .table th {
@@ -120,6 +139,38 @@
             <?php } ?>
           </td>
         </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<h2 id="ivods" class="ml-2 mt-4 mb-3 h5">會議 IVOD</h2>
+<div class="card shadow mt-3 mb-3">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th class="text-center align-middle">IVOD_ID</th>
+            <th class="text-center align-middle">日期</th>
+            <th class="text-center align-middle">質詢委員/影片種類</th>
+            <th class="text-center align-middle">時間</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($ivods as $ivod) { ?>
+            <tr class="text-center align-middle">
+              <td>
+                <?= $this->escape($ivod->IVOD_ID) ?>
+                <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>">
+                  <i class="fas fa-fw fa-eye"></i>
+                </a>
+              </td>
+              <td><?= $this->escape($ivod->日期) ?></td>
+              <td><?= $this->escape($ivod->委員名稱) ?></td>
+              <td><?= $this->escape($ivod->委員發言時間) ?></td>
+            </tr>
+          <?php } ?>
+        </tbody>
       </table>
     </div>
   </div>
