@@ -56,13 +56,58 @@
         }
     }
 
+    $ppg_data = $meet->議事網資料 ?? [];
+
+    //連結
+    $merged_links = (object) [
+        'urls' => [],
+        'titles' => [],
+    ];
+    foreach ($ppg_data as $ppg_single_data) {
+        $links = $ppg_single_data->連結 ?? [];
+        //ppg 上的影片都不會連到單一個 ivod_id 使得這些 video 連結變得很沒意義，就先把它們都去掉
+        $links = array_filter($links, function($link) {
+            $type = $link->類型 ?? '';
+            return $type != 'video';
+        });
+        foreach ($links as $link) {
+            $url = $link->連結 ?? '';
+            $idx = array_search($url, $merged_links->urls);
+            if ($idx === false) {
+                $merged_links->urls[] = $url;
+                $merged_links->titles[] = $link->標題 ?? '';
+            }
+        }
+    }
+
+    //附件
+    $merged_attaches = (object) [
+        'urls' => [],
+        'titles' => [],
+    ];
+    foreach ($ppg_data as $ppg_single_data) {
+        $attaches = $ppg_single_data->附件 ?? [];
+        //有一些附件是空的連結，這些就去掉不算附件
+        $attaches = array_filter($attaches, function($attach) {
+            $url = $attach->連結 ?? '';
+            return $url != '';
+        });
+        foreach ($attaches as $attach) {
+            $url = $attach->連結 ?? '';
+            $idx = array_search($url, $merged_attaches->urls);
+            if ($idx === false) {
+                $merged_attaches->urls[] = $url;
+                $merged_attaches->titles[] = $attach->標題 ?? '';
+            }
+        }
+    }
+
     //關係文書
     $merged_related_docs = (object) [
         'bill_ids' => [],
         'dates' => [],
         'titles' => [],
     ];
-    $ppg_data = $meet->議事網資料 ?? [];
     foreach ($ppg_data as $ppg_single_data) {
         $related_docs = $ppg_single_data->關係文書 ?? new stdClass();
         $bill_related_docs = $related_docs->議案 ?? [];
@@ -164,6 +209,34 @@
                 </p>
               </td>
             <?php } ?>
+          </tr>
+        <?php } ?>
+        <?php if (!empty($merged_links->urls)) { ?>
+          <tr>
+            <td class="text-center align-middle">連結</td>
+            <td>
+              <?php foreach ($merged_links->urls as $idx => $url) { ?>
+                <p>
+                  <a href="<?= $this->escape($url) ?>" target="_blank">
+                    <?= $this->escape($merged_links->titles[$idx]) ?>
+                  </a>
+                </p>
+              <?php } ?>
+            </td>
+          </tr>
+        <?php } ?>
+        <?php if (!empty($merged_attaches->urls)) { ?>
+          <tr>
+            <td class="text-center align-middle">附件</td>
+            <td>
+              <?php foreach ($merged_attaches->urls as $idx => $url) { ?>
+                <p>
+                  <a href="<?= $this->escape($url) ?>" target="_blank">
+                    <?= $this->escape($merged_attaches->titles[$idx]) ?>
+                  </a>
+                </p>
+              <?php } ?>
+            </td>
           </tr>
         <?php } ?>
         <tr>
