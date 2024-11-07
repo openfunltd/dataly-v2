@@ -56,10 +56,42 @@
         }
     }
 
+    //關係文書
+    $merged_related_docs = (object) [
+        'bill_ids' => [],
+        'dates' => [],
+        'titles' => [],
+    ];
+    $ppg_data = $meet->議事網資料 ?? [];
+    foreach ($ppg_data as $ppg_single_data) {
+        $related_docs = $ppg_single_data->關係文書 ?? new stdClass();
+        $bill_related_docs = $related_docs->議案 ?? [];
+        //get dates of the ppg_single_date
+        $ppg_dates = $ppg_single_data->日期 ?? [];
+        $ppg_formatted_dates = [];
+        foreach ($ppg_dates as $ppg_date) {
+            if (preg_match('/(\d{3})年(\d{1,2})月(\d{1,2})日/', $ppg_date, $matches)) {
+                $year = $matches[1] + 1911;
+                $ppg_formatted_dates[] = "{$year}-{$matches[2]}-{$matches[3]}";
+            }
+        }
+        foreach ($bill_related_docs as $bill) {
+            $bill_id = $bill->議案編號 ?? '-';
+            $idx = array_search($bill_id, $merged_related_docs->bill_ids);
+            if ($idx !== false) {
+                $merged_related_docs->dates[$idx] = array_merge($merged_related_docs->dates[$idx], $ppg_formatted_dates);
+            } else {
+                $merged_related_docs->bill_ids[] = $bill_id;
+                $merged_related_docs->dates[] = $ppg_formatted_dates;
+                $merged_related_docs->titles[] = $bill->標題 ?? '';
+            }
+        }
+    }
+
     //ivods
     $ivods = LYAPI::apiQuery(
         sprintf('/meet/%s/ivods', urlencode($this->data->id[0])),
-        sprintf("取得關連的 IVOD 影片資料", $this->data->id[0])
+        sprintf("取得關連的 IVOD 影片", $this->data->id[0])
     );
     $ivods = $ivods->ivods ?? [];
     $clip_ivods = array_filter($ivods, function($ivod) {
@@ -74,6 +106,13 @@
     usort($clip_ivods, 'ivodStartTimeSort');
     usort($full_ivods, 'ivodStartTimeSort');
     $ivods = array_merge($full_ivods, $clip_ivods);
+
+    //i12n = interpellation
+    $i12ns = LYAPI::apiQuery(
+        sprintf('/meet/%s/interpellations', urlencode($this->data->id[0])),
+        sprintf("取得關連的書面質詢", $this->data->id[0])
+    );
+    $i12ns = $i12ns->interpellations ?? [];
 ?>
 <style>
   .table td, .table th {
@@ -143,38 +182,112 @@
     </div>
   </div>
 </div>
-<h2 id="ivods" class="ml-2 mt-4 mb-3 h5">會議 IVOD</h2>
-<div class="card shadow mt-3 mb-3">
-  <div class="card-body">
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover table-sm">
-        <thead>
-          <tr>
-            <th class="text-center align-middle">IVOD_ID</th>
-            <th class="text-center align-middle">日期</th>
-            <th class="text-center align-middle">質詢委員/影片種類</th>
-            <th class="text-center align-middle">時間</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($ivods as $ivod) { ?>
-            <tr class="text-center align-middle">
-              <td>
-                <?= $this->escape($ivod->IVOD_ID) ?>
-                <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>">
-                  <i class="fas fa-fw fa-eye"></i>
-                </a>
-              </td>
-              <td><?= $this->escape($ivod->日期) ?></td>
-              <td><?= $this->escape($ivod->委員名稱) ?></td>
-              <td><?= $this->escape($ivod->委員發言時間) ?></td>
+<?php if (!empty($merged_related_docs->bill_ids)) { ?>
+    <h2 id="related_doc" class="ml-2 mt-4 mb-3 h5">關係文書</h2>
+    <div class="card shadow mt-3 mb-3">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover table-sm">
+            <thead>
+              <tr>
+                <th class="text-center align-middle">議案編號</th>
+                <th class="text-center align-middle">日期</th>
+                <th class="text-center align-middle">議案名稱</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($merged_related_docs->bill_ids as $idx => $bill_id) { ?>
+                <tr>
+                  <td class="text-center align-middle">
+                    <?= $this->escape($bill_id) ?>
+                    <?php if ($bill_id != '-') { ?>
+                      <a href="/collection/item/bill/<?= $this->escape($bill_id) ?>">
+                        <i class="fas fa-fw fa-eye"></i>
+                      </a>
+                    <?php } ?>
+                  </td>
+                  <td class="text-center align-middle">
+                    <?= $this->escape(implode('、', $merged_related_docs->dates[$idx])) ?>
+                  </td>
+                  <td class="align-middle"><?= $this->escape($merged_related_docs->titles[$idx]) ?></td>
+                </tr>
+              <?php } ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+<?php } ?>
+<?php if (!empty($i12ns)) { ?>
+  <h2 id="interpellations" class="ml-2 mt-4 mb-3 h5">書面質詢</h2>
+  <div class="card shadow mt-3 mb-3">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+          <thead>
+            <tr>
+              <th class="text-center align-middle">質詢編號</th>
+              <th class="text-center align-middle">刊登日期</th>
+              <th class="text-center align-middle">質詢委員</th>
             </tr>
-          <?php } ?>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <?php foreach ($i12ns as $i12n) { ?>
+              <tr>
+                <td class="text-center align-middle" style="width: 20%;">
+                  <?= $this->escape($i12n->質詢編號) ?>
+                  <a href="/collection/item/interpellation/<?= $this->escape($i12n->質詢編號) ?>">
+                    <i class="fas fa-fw fa-eye"></i>
+                  </a>
+                </td>
+                <td class="text-center align-middle" style="width: 20%;">
+                  <?= $this->escape($i12n->刊登日期) ?>
+                </td>
+                <td class="text-center align-middle">
+                  <?= $this->escape(implode('、', $i12n->質詢委員 ?? [])) ?>
+                </td>
+              </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
+<?php } ?>
+<?php if (!empty($ivods)) { ?>
+  <h2 id="ivods" class="ml-2 mt-4 mb-3 h5">會議 IVOD</h2>
+  <div class="card shadow mt-3 mb-3">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+          <thead>
+            <tr>
+              <th class="text-center align-middle">IVOD_ID</th>
+              <th class="text-center align-middle">日期</th>
+              <th class="text-center align-middle">質詢委員/影片種類</th>
+              <th class="text-center align-middle">時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($ivods as $ivod) { ?>
+              <tr class="text-center align-middle">
+                <td>
+                  <?= $this->escape($ivod->IVOD_ID) ?>
+                  <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>">
+                    <i class="fas fa-fw fa-eye"></i>
+                  </a>
+                </td>
+                <td><?= $this->escape($ivod->日期) ?></td>
+                <td><?= $this->escape($ivod->委員名稱) ?></td>
+                <td><?= $this->escape($ivod->委員發言時間) ?></td>
+              </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<?php } ?>
 <script>
   window.onload = function() {
     $('.meet-reason').click(function(){
