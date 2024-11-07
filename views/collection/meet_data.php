@@ -230,7 +230,7 @@
             <td class="text-center align-middle">附件</td>
             <td>
               <?php foreach ($merged_attaches->urls as $idx => $url) { ?>
-                <p>
+                <p class="m-0">
                   <a href="<?= $this->escape($url) ?>" target="_blank">
                     <?= $this->escape($merged_attaches->titles[$idx]) ?>
                   </a>
@@ -260,7 +260,7 @@
     <div class="card shadow mt-3 mb-3">
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table table-bordered table-hover table-sm">
+          <table id="related-doc-table" class="table table-bordered table-hover table-sm">
             <thead>
               <tr>
                 <th class="text-center align-middle">議案編號</th>
@@ -332,7 +332,7 @@
   <div class="card shadow mt-3 mb-3">
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-bordered table-hover table-sm">
+        <table id="ivod-table" class="table table-bordered table-hover table-sm">
           <thead>
             <tr>
               <th class="text-center align-middle">IVOD_ID</th>
@@ -371,3 +371,4 @@
     });
   }
 </script>
+<script src="/static/js/meet/custom_data.js"></script>
