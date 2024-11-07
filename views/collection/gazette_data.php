@@ -4,10 +4,15 @@ $gazette = $this->data->data;
 $scroll_idx = $gazette->卷 ?? '';
 $issue_idx = $gazette->期 ?? '';
 $volume_idx = $gazette->冊別 ?? '';
-$gazette_idx = sprintf('立法院第%d卷 第%d期 冊別%d', 
+$gazette_idx = sprintf('立法院第%d卷 第%d期 第%d冊', 
     $scroll_idx,
     $issue_idx,
     $volume_idx,
+);
+$ppg_url = sprintf('https://ppg.ly.gov.tw/ppg/publications/official-gazettes/%d/%d/%s/details',
+    $scroll_idx,
+    $issue_idx,
+    str_pad($volume_idx, 2, '0', STR_PAD_LEFT),
 );
 
 $conditions = [
@@ -27,6 +32,9 @@ $gazette_agendas = $gazette_agendas->gazetteagendas;
 $gazette_agendas = array_filter($gazette_agendas, function($agenda) use ($scroll_idx, $issue_idx, $volume_idx) {
     return $agenda->卷 == $scroll_idx and $agenda->期 == $issue_idx and $agenda->冊別 == $volume_idx;
 });
+
+$ppg_url = $gazette_agendas[0]->公報網網址;
+$gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
 ?>
 <style>
   .table td, .table th {
@@ -44,6 +52,13 @@ $gazette_agendas = array_filter($gazette_agendas, function($agenda) use ($scroll
         <tr>
           <td>發布日期</td>
           <td><?= $this->escape($gazette->發布日期 ?? '') ?></td>
+        </tr>
+        <tr>
+          <td>原始資料連結</td>
+          <td>
+            <p class="m-0"><a href="<?= $this->escape($ppg_url) ?>" target="_blank">立法院議事暨公報資訊網</a></p>
+            <p class="m-0"><a href="<?= $this->escape($gazette_pdf_url) ?>" target="_blank">完整公報 PDF</a></p>
+          </td>
         </tr>
       </table>
     </div>
