@@ -160,6 +160,9 @@ class TypeHelper
                     '屆',
                     '質詢委員',
                 ],
+                'item_features' => [
+                    'data' => '質詢資料',
+                ],
             ],
         ];
     }
