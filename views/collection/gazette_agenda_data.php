@@ -22,7 +22,7 @@ $agenda_types = [
 ];
 
 //agenda content
-$parsed_doc_urls = $agenda->處理後公報網址 ?? '';
+$parsed_doc_urls = $agenda->處理後公報網址 ?? [];
 $tikahtml_doc = array_filter($parsed_doc_urls, function($doc) {
     return $doc->type == 'tikahtml';
 });
@@ -32,7 +32,25 @@ $allowedTags = '<p><b><i><ul><ol><li><br><div><span><h1><h2><h3><h4><h5><h6>';
 $tikahtml_content = strip_tags($tikahtml_content, $allowedTags);
 $tikahtml_content = preg_replace('/(on\w+|style)="[^"]*"/i', '', $tikahtml_content);
 
+//doc_urls
+$doc_urls = $agenda->doc檔案下載位置 ?? [];
+$doc_url_titles = [];
+if (count($doc_urls) == 1) {
+    $doc_url_titles = ['DOC 檔案下載'];
+} else if (count($doc_urls > 1)) {
+    foreach ($doc_urls as $idx => $url) {
+        $index = $idx + 1;
+        $doc_url_titles[] = 'DOC 檔案下載-' . $index;
+    }
+}
+
+//ppg_url with anchor to id
+$ppg_url = $agenda->公報網網址 ?? '';
+if ($ppg_url != '') {
+    $ppg_url .= '#section-' . $agenda->目錄編號 ?? '';
+}
 ?>
+
 <style>
   #html-content p {
     margin: 2px !important;
@@ -74,6 +92,37 @@ $tikahtml_content = preg_replace('/(on\w+|style)="[^"]*"/i', '', $tikahtml_conte
         <tr>
           <td>案由</td>
           <td><?= $this->escape($agenda->案由 ?? '') ?></td>
+        </tr>
+        <?php if (!empty($parsed_doc_urls)) { ?>
+          <tr>
+            <td>處理後公報網址</td>
+            <td>
+              <?php foreach ($parsed_doc_urls as $doc) { ?>
+                <p class="m-0">
+                  <a href="<?= $this->escape($doc->url ?? '') ?>" target="_blank">
+                    <?= $this->escape($doc->type ?? '') ?>
+                  </a>
+                </p>
+              <?php } ?>
+            </td>
+          </tr>
+        <?php } ?>
+        <tr>
+          <td>原始資料連結</td>
+          <td>
+            <?php if (!empty($doc_urls)) { ?>
+              <?php foreach ($doc_urls as $idx => $doc_url) { ?>
+                <p class="m-0">
+                  <a href="<?= $this->escape($doc_url) ?>" target="_blank">
+                    <?= $this->escape($doc_url_titles[$idx]) ?>
+                  </a>
+                </p>
+              <?php } ?>
+            <?php } ?>
+            <?php if ($ppg_url != '') { ?>
+                <p class="m-0"><a href="<?= $this->escape($ppg_url) ?>" target="_blank">立法院議事暨公報資訊網</a></p>
+            <?php } ?>
+          </td>
         </tr>
       </table>
     </div>
