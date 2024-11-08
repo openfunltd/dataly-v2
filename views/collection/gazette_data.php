@@ -22,6 +22,19 @@ $conditions = [
     'limit' => 1000,
 ];
 
+$agendaTypes = [
+    1 => '院會',
+    2 => '國是論壇',
+    3 => '委員會',
+    4 => '質詢事項',
+    5 => '議事錄',
+    8 => '黨團協商紀錄',
+    9 => '發言索引',
+    10 => '報告事項',
+    11 => '討論事項',
+    12 => '臨時提案',
+];
+
 $get_query = '';
 foreach ($conditions as $key => $val) {
     $get_query .= "&{$key}={$val}";
@@ -72,6 +85,7 @@ $gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
         <thead>
           <tr>
             <th class="text-center align-middle">公報議程編號</th>
+            <th class="text-center align-middle">章節類別</th>
             <th class="text-center align-middle">頁碼</th>
             <th class="text-center align-middle">會議日期</th>
             <th>案由</th>
@@ -85,6 +99,10 @@ $gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
                 <a href="/collection/item/gazette_agenda/<?= $this->escape($agenda->公報議程編號 ?? '') ?>">
                   <i class="fas fa-fw fa-eye"></i>
                 </a>
+              </td>
+              <td class="text-center align-middle">
+                <?php $agendaType = $agenda->類別代碼 ?? ''; ?>
+                <?= $this->escape($agendaTypes[$agendaType] ?? '') ?>
               </td>
               <td class="text-center align-middle">
                 <?= $this->escape($agenda->起始頁碼 ?? '') ?> ~ <?= $this->escape($agenda->結束頁碼 ?? '') ?>
