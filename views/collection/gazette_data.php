@@ -78,21 +78,21 @@ $gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($gazette_agendas as $agendas) { ?>
+          <?php foreach ($gazette_agendas as $agenda) { ?>
             <tr>
               <td class="text-center align-middle">
-                <?= $this->escape($agendas->公報議程編號 ?? '') ?>
-                <a href="/collection/item/gazette_agenda/<?= $this->escape($agendas->公報議程編號 ?? '') ?>">
+                <?= $this->escape($agenda->公報議程編號 ?? '') ?>
+                <a href="/collection/item/gazette_agenda/<?= $this->escape($agenda->公報議程編號 ?? '') ?>">
                   <i class="fas fa-fw fa-eye"></i>
                 </a>
               </td>
               <td class="text-center align-middle">
-                <?= $this->escape($agendas->起始頁碼 ?? '') ?> ~ <?= $this->escape($agendas->結束頁碼 ?? '') ?>
+                <?= $this->escape($agenda->起始頁碼 ?? '') ?> ~ <?= $this->escape($agenda->結束頁碼 ?? '') ?>
               </td>
               <td class="text-center align-middle">
-                <?= $this->escape(implode('、', $agendas->會議日期 ?? [])) ?>
+                <?= $this->escape(implode('、', $agenda->會議日期 ?? [])) ?>
               </td>
-              <td><?= $this->escape($agendas->案由 ?? '') ?></td>
+              <td><?= $this->escape($agenda->案由 ?? '') ?></td>
             </tr>
           <?php } ?>
         </tbody>
