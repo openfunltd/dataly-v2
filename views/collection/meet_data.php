@@ -152,12 +152,12 @@
     usort($full_ivods, 'ivodStartTimeSort');
     $ivods = array_merge($full_ivods, $clip_ivods);
 
-    //i12n = interpellation
-    $i12ns = LYAPI::apiQuery(
+    //interpellation
+    $interpellations = LYAPI::apiQuery(
         sprintf('/meet/%s/interpellations', urlencode($this->data->id[0])),
         sprintf("取得關連的書面質詢", $this->data->id[0])
     );
-    $i12ns = $i12ns->interpellations ?? [];
+    $interpellations = $interpellations->interpellations ?? [];
 ?>
 <style>
   .table td, .table th {
@@ -291,7 +291,7 @@
       </div>
     </div>
 <?php } ?>
-<?php if (!empty($i12ns)) { ?>
+<?php if (!empty($interpellations)) { ?>
   <h2 id="interpellations" class="ml-2 mt-4 mb-3 h5">書面質詢</h2>
   <div class="card shadow mt-3 mb-3">
     <div class="card-body">
@@ -305,19 +305,19 @@
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($i12ns as $i12n) { ?>
+            <?php foreach ($interpellations as $interpellation) { ?>
               <tr>
                 <td class="text-center align-middle" style="width: 20%;">
-                  <?= $this->escape($i12n->質詢編號) ?>
-                  <a href="/collection/item/interpellation/<?= $this->escape($i12n->質詢編號) ?>">
+                  <?= $this->escape($interpellation->質詢編號) ?>
+                  <a href="/collection/item/interpellation/<?= $this->escape($interpellation->質詢編號) ?>">
                     <i class="fas fa-fw fa-eye"></i>
                   </a>
                 </td>
                 <td class="text-center align-middle" style="width: 20%;">
-                  <?= $this->escape($i12n->刊登日期) ?>
+                  <?= $this->escape($interpellation->刊登日期) ?>
                 </td>
                 <td class="text-center align-middle">
-                  <?= $this->escape(implode('、', $i12n->質詢委員 ?? [])) ?>
+                  <?= $this->escape(implode('、', $interpellation->質詢委員 ?? [])) ?>
                 </td>
               </tr>
             <?php } ?>
