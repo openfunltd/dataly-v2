@@ -145,6 +145,9 @@ class TypeHelper
                 'default_aggs' => [
                     '卷',
                 ],
+                'item_features' => [
+                    'data' => '章節資料'
+                ],
             ],
             'interpellation' => [
                 'name' => '書面質詢',
