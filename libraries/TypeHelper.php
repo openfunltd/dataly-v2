@@ -130,6 +130,9 @@ class TypeHelper
                 'default_aggs' => [
                     '卷',
                 ],
+                'item_features' => [
+                    'data' => '公報資料',
+                ],
             ],
             'gazette_agenda' => [
                 'name' => '公報章節',
