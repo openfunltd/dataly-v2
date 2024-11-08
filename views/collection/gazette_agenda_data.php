@@ -8,7 +8,39 @@ $gazette_idx = sprintf('立法院第%d卷 第%d期 第%d冊',
     $issue_idx,
     $volume_idx,
 );
+$agenda_types = [
+    1 => '院會',
+    2 => '國是論壇',
+    3 => '委員會',
+    4 => '質詢事項',
+    5 => '議事錄',
+    8 => '黨團協商紀錄',
+    9 => '發言索引',
+    10 => '報告事項',
+    11 => '討論事項',
+    12 => '臨時提案',
+];
+
+//agenda content
+$parsed_doc_urls = $agenda->處理後公報網址 ?? '';
+$tikahtml_doc = array_filter($parsed_doc_urls, function($doc) {
+    return $doc->type == 'tikahtml';
+});
+$tikahtml_url = array_shift($tikahtml_doc)->url;
+$tikahtml_content = file_get_contents($tikahtml_url);
+$allowedTags = '<p><b><i><ul><ol><li><br><div><span><h1><h2><h3><h4><h5><h6>';
+$tikahtml_content = strip_tags($tikahtml_content, $allowedTags);
+$tikahtml_content = preg_replace('/(on\w+|style)="[^"]*"/i', '', $tikahtml_content);
+
 ?>
+<style>
+  #html-content p {
+    margin: 2px !important;
+  }
+  #html-content p:has(b) {
+    margin: 10px !important;
+  }
+</style>
 <div class="card shadow mt-3 mb-3">
   <div class="card-body">
     <div class="table-responsive">
@@ -28,13 +60,28 @@ $gazette_idx = sprintf('立法院第%d卷 第%d期 第%d冊',
         </tr>
         <tr>
           <td>類別代碼</td>
-          <td><?= $this->escape($agenda->類別代碼 ?? '') ?></td>
+          <?php $agenda_type = $agenda->類別代碼 ?? '' ?>
+          <td><?= $this->escape($agenda_types[$agenda_type] ?? '') ?></td>
         </tr>
         <tr>
           <td>屆-會期</td>
           <td><?= $this->escape($agenda->屆 ?? '') ?>-<?= $this->escape($agenda->會期 ?? '') ?></td>
         </tr>
+        <tr>
+          <td>會議日期</td>
+          <td><?= $this->escape(implode('、', $agenda->會議日期 ?? [])) ?></td>
+        </tr>
+        <tr>
+          <td>案由</td>
+          <td><?= $this->escape($agenda->案由 ?? '') ?></td>
+        </tr>
       </table>
     </div>
+  </div>
+</div>
+<h2 id="content" class="ml-2 mt-4 mb-3 h5">章節內容</h2>
+<div class="card shadow mt-3 mb-3">
+  <div id="html-content" class="card-body">
+    <?= $tikahtml_content ?>
   </div>
 </div>
