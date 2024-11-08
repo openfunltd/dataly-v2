@@ -77,7 +77,7 @@ if ($ppg_url != '') {
           <td><?= $this->escape($agenda->起始頁碼 ?? '') ?> ~ <?= $this->escape($agenda->結束頁碼 ?? '') ?></td>
         </tr>
         <tr>
-          <td>類別代碼</td>
+          <td>章節類別</td>
           <?php $agenda_type = $agenda->類別代碼 ?? '' ?>
           <td><?= $this->escape($agenda_types[$agenda_type] ?? '') ?></td>
         </tr>
