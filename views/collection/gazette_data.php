@@ -49,11 +49,6 @@ $gazette_agendas = array_filter($gazette_agendas, function($agenda) use ($scroll
 $ppg_url = $gazette_agendas[0]->公報網網址;
 $gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
 ?>
-<style>
-  .table td, .table th {
-    white-space: nowrap;
-  }
-</style>
 <div class="card shadow mt-3 mb-3">
   <div class="card-body">
     <div class="table-responsive">
@@ -84,9 +79,9 @@ $gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
       <table id="agendas-table" class="table table-bordered table-hover table-sm">
         <thead>
           <tr>
-            <th class="text-center align-middle">公報議程編號</th>
-            <th class="text-center align-middle">章節類別</th>
-            <th class="text-center align-middle">頁碼</th>
+            <th class="text-center align-middle" style="width: 10%">公報議程編號</th>
+            <th class="text-center align-middle" style="width: 4%">章節類別</th>
+            <th class="text-center align-middle" style="width: 6%">頁碼</th>
             <th class="text-center align-middle">會議日期</th>
             <th>案由</th>
           </tr>
