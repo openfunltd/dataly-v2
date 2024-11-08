@@ -21,17 +21,6 @@ $agenda_types = [
     12 => '臨時提案',
 ];
 
-//agenda content
-$parsed_doc_urls = $agenda->處理後公報網址 ?? [];
-$tikahtml_doc = array_filter($parsed_doc_urls, function($doc) {
-    return $doc->type == 'tikahtml';
-});
-$tikahtml_url = array_shift($tikahtml_doc)->url;
-$tikahtml_content = file_get_contents($tikahtml_url);
-$allowedTags = '<p><b><i><ul><ol><li><br><div><span><h1><h2><h3><h4><h5><h6>';
-$tikahtml_content = strip_tags($tikahtml_content, $allowedTags);
-$tikahtml_content = preg_replace('/(on\w+|style)="[^"]*"/i', '', $tikahtml_content);
-
 //doc_urls
 $doc_urls = $agenda->doc檔案下載位置 ?? [];
 $doc_url_titles = [];
@@ -126,11 +115,5 @@ if ($ppg_url != '') {
         </tr>
       </table>
     </div>
-  </div>
-</div>
-<h2 id="content" class="ml-2 mt-4 mb-3 h5">章節內容</h2>
-<div class="card shadow mt-3 mb-3">
-  <div id="html-content" class="card-body">
-    <?= $tikahtml_content ?>
   </div>
 </div>

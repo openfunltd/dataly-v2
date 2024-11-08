@@ -146,7 +146,8 @@ class TypeHelper
                     '卷',
                 ],
                 'item_features' => [
-                    'data' => '章節資料'
+                    'data' => '章節資料',
+                    'content' => '章節內容'
                 ],
             ],
             'interpellation' => [
