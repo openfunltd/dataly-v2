@@ -80,10 +80,10 @@ $gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
         <thead>
           <tr>
             <th class="text-center align-middle" style="width: 10%">公報議程編號</th>
-            <th class="text-center align-middle" style="width: 4%">章節類別</th>
+            <th class="text-center align-middle" style="width: 6%">章節類別</th>
             <th class="text-center align-middle" style="width: 6%">頁碼</th>
             <th class="text-center align-middle">會議日期</th>
-            <th>案由</th>
+            <th class="text-center align-middle">案由</th>
           </tr>
         </thead>
         <tbody>
