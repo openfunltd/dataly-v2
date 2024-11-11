@@ -120,6 +120,23 @@ class TypeHelper
                     '法律狀態',
                 ],
             ],
+            'law_content' => [
+                'name' => '法律條文',
+                'icon' => 'fas fa-fw fa-balance-scale',
+                'cols' => [
+                    '法律編號:str',
+                    '版本編號',
+                    '順序',
+                    '條號',
+                    '章名',
+                    '內容',
+                    '立法理由',
+                ],
+                'default_aggs' => [
+                    '法律編號',
+                    '版本編號',
+                ],
+            ],
             'gazette' => [
                 'name' => '公報',
                 'icon' => 'fas fa-fw fa-newspaper',
