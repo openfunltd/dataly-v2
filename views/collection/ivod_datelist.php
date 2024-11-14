@@ -1,24 +1,45 @@
 <?php
 $week_data = array('日', '一', '二', '三', '四', '五', '六');
-$term_selected = 0;
-$session_period_selected = 0;
+$term_selected = filter_input(INPUT_GET, '屆', FILTER_VALIDATE_INT) ?? -1;
+$session_period_selected = filter_input(INPUT_GET, '會期', FILTER_VALIDATE_INT) ?? -1;
 $date_list = [];
 
-//無提供參數時選擇最新的屆期與會期
-if (empty($_GET)) {
-    $res = LYAPI::apiQuery('/ivods?&limit=1&output_fields=會議資料.屆&output_fields=會議資料.會期&agg=屆', '查詢最新的屆期/會期');
-    $term_selected = $res->ivods[0]->會議資料->屆;
-    $session_period_latest = $res->ivods[0]->會議資料->會期;
-    $res = LYAPI::apiQuery("/ivods?屆={$term_selected}&agg=會期", "查詢第 {$term_selected} 屆所有的會期選項");
-    $session_period_options = array_map(function($session_period) {
-        $obj = (object) [
-            '會期' => $session_period->會期,
-        ];
-        return $obj;
-    },$res->aggs[0]->buckets);
-    rsort($session_period_options);
-    $session_period_selected = $session_period_options[0]->會期;
+function redirectValidParams($term_latest, $session_period_latest) {
+    $params['屆'] = $term_latest;
+    $params['會期'] = $session_period_latest;
+    $url = strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($params);
+    header('Location: ' . $url, true, 302);
 }
+
+$res = LYAPI::apiQuery('/ivods?&limit=1&output_fields=會議資料.屆&output_fields=會議資料.會期&agg=屆', '查詢最新的屆期/會期');
+$term_latest = $res->ivods[0]->會議資料->屆;
+$session_period_latest = $res->ivods[0]->會議資料->會期;
+$term_options = array_map(function($term) {
+    return $term->屆;
+}, $res->aggs[0]->buckets);
+rsort($term_options);
+
+$res = LYAPI::apiQuery("/ivods?屆={$term_selected}&agg=會期", "查詢第 {$term_selected} 屆所有的會期選項");
+if ($res->total == 0) {
+    redirectValidParams($term_latest, $session_period_latest);
+    exit;
+}
+
+$session_period_options = array_map(function($session_period) {
+    $obj = (object) [
+        '會期' => $session_period->會期,
+    ];
+    return $obj;
+},$res->aggs[0]->buckets);
+rsort($session_period_options);
+
+$found = array_filter($session_period_options, function($option) use ($session_period_selected) {
+    return $option->會期 == $session_period_selected;
+});
+if (empty($found)) {
+    redirectValidParams($term_selected, $session_period_options[0]->會期);
+}
+
 foreach ($session_period_options as $option) {
     $session_period = $option->會期;
     $res = LYAPI::apiQuery("/ivods?屆={$term_selected}&會期={$session_period}&agg=日期&limit=0",
