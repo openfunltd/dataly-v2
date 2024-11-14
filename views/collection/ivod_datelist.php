@@ -76,7 +76,7 @@ usort($date_list, function ($rowA, $rowB) {
         <h6 class="m-0 font-weight-bold text-primary">資料</h6>
       </div>
     <div class="card-body">
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <table class="table table-bordered" id="ivod-date-table" width="100%" cellspacing="0">
       <thead>
         <tr>
           <th>日期</th>
@@ -102,3 +102,12 @@ usort($date_list, function ($rowA, $rowB) {
     </table>
   </div>
 </div>
+<script>
+  window.onload = function(){
+    if ($("#ivod-date-table").length) {
+      const table = $('#ivod-date-table').DataTable({
+        fixedHeader: true,
+      });
+    }
+  }
+</script>
