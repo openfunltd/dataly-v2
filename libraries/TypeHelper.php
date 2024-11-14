@@ -136,6 +136,9 @@ class TypeHelper
                     '法律編號',
                     '版本編號',
                 ],
+                'item_features' => [
+                    'data' => '法條資料',
+                ],
             ],
             'gazette' => [
                 'name' => '公報',
