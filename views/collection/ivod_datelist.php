@@ -150,6 +150,7 @@ usort($date_list, function ($rowA, $rowB) {
   window.onload = function(){
     if ($("#ivod-date-table").length) {
       const table = $('#ivod-date-table').DataTable({
+        order: [],
         fixedHeader: true,
       });
     }
