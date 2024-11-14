@@ -71,7 +71,18 @@ usort($date_list, function ($rowA, $rowB) {
                 <h6 class="m-0 font-weight-bold text-primary agg-name">屆</h6>
               </div>
               <div class="card-body">
-                <?php foreach ($term_options as $idx => $option) { ?>
+                <?php foreach ($term_options as $term) { ?>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio" name="term"
+                      id="term-<?= $this->escape($term) ?>"
+                      <?= ($term == $term_selected) ? 'checked' : '' ?>
+                    >
+                    <label class="form-check-label" for="term-<?= $this->escape($term) ?>">
+                      <?= $this->escape($term) ?>
+                    </label>
+                  </div>
                 <?php } ?>
               </div>
             </div>
@@ -82,7 +93,19 @@ usort($date_list, function ($rowA, $rowB) {
                 <h6 class="m-0 font-weight-bold text-primary agg-name">會期</h6>
               </div>
               <div class="card-body">
-                <?php foreach ($session_period_options as $idx => $option) { ?>
+                <?php foreach ($session_period_options as $option) { ?>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="session_period"
+                      id="session_period-<?= $this->escape($option->會期) ?>"
+                      <?= ($option->會期 == $session_period_selected) ? 'checked' : '' ?>
+                    >
+                    <label class="form-check-label" for="session_period-<?= $this->escape($option->會期) ?>">
+                      <?= $this->escape($option->會期) ?>
+                    </label>
+                  </div>
                 <?php } ?>
               </div>
             </div>
