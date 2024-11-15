@@ -238,7 +238,11 @@ $(document).ready(function() {
                 for (let record of records) {
                     var row = [];
                     for (let col of table_config.columns) {
-                        row.push(record[col] || '');
+                        if (record[col + ':highlight']) {
+                            row.push(record[col + ':highlight'].join("\n"));
+                        } else {
+                            row.push(record[col] || '');
+                        }
                     }
                     var id_terms = [];
                     for (let id_field of ret.id_fields) {
@@ -281,6 +285,10 @@ $(document).ready(function() {
 });
 </script>
 <style>
+em {
+  font-style: normal;
+  color: #f00;
+}
 #filter-fields .card-body {
   max-height: 200px;
   overflow-y: auto;
