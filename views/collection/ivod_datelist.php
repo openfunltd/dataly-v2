@@ -4,16 +4,22 @@ $term_selected = filter_input(INPUT_GET, '屆', FILTER_VALIDATE_INT) ?? -1;
 $session_period_selected = filter_input(INPUT_GET, '會期', FILTER_VALIDATE_INT) ?? -1;
 $date_list = [];
 
-function redirectValidParams($term_latest, $session_period_latest) {
-    $params['屆'] = $term_latest;
-    $params['會期'] = $session_period_latest;
+function redirectValidParams($term, $session_period) {
+    $params['屆'] = $term;
+    $params['會期'] = $session_period;
     $url = strtok($_SERVER['REQUEST_URI'], '?') . '?' . http_build_query($params);
     header('Location: ' . $url, true, 302);
+    exit;
 }
 
-$res = LYAPI::apiQuery('/ivods?&limit=1&output_fields=會議資料.屆&output_fields=會議資料.會期&agg=屆', '查詢最新的屆期/會期');
-$term_latest = $res->ivods[0]->會議資料->屆;
-$session_period_latest = $res->ivods[0]->會議資料->會期;
+$res = LYAPI::apiQuery('/ivods?&limit=30&output_fields=會議資料.屆&output_fields=會議資料.會期&agg=屆', '查詢最新的屆期/會期');
+$ivods = array_filter($res->ivods, function($ivod) {
+    $meet_data = $ivod->會議資料;
+    return isset($meet_data);
+});
+$ivods = array_values($ivods);
+$term_latest = $ivods[0]->會議資料->屆;
+$session_period_latest = max(array_map(fn($ivod) => $ivod->會議資料->會期, $ivods));
 $term_options = array_map(function($term) {
     return $term->屆;
 }, $res->aggs[0]->buckets);
@@ -22,7 +28,6 @@ rsort($term_options);
 $res = LYAPI::apiQuery("/ivods?屆={$term_selected}&agg=會期", "查詢第 {$term_selected} 屆所有的會期選項");
 if ($res->total == 0) {
     redirectValidParams($term_latest, $session_period_latest);
-    exit;
 }
 
 $session_period_options = array_map(function($session_period) {
