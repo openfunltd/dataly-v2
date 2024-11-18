@@ -1,12 +1,12 @@
 <?php
-$date_input = $this->date_input;
+$date = $this->date;
 $data = $this->data;
 $ivod_count = $data->total ?? 0;
 ?>
 <?php if ($ivod_count === 0) { ?>
   <div class="mt-3 card border-left-danger">
     <div class="card-body">
-      日期：<?= $this->escape($date_input) ?> 無 IVOD
+      日期：<?= $this->escape($date) ?> 無 IVOD
     </div>
   </div>
 <?php return; } ?>
@@ -51,7 +51,7 @@ $party_icon_urls = PartyHelper::$icon_urls;
     margin: 0 3px 3px 3px;
 }
 </style>
-<h2 class="ml-2 mt-3 h3">IVOD 列表 :: <?= $this->escape($date_input) ?></h2>
+<h2 class="ml-2 mt-3 h3">IVOD 列表 :: <?= $this->escape($date) ?></h2>
 <a class="my-0 btn btn-primary" href="/collection/list/ivod/datelist?屆=<?= $this->escape($term) ?>&會期=<?= $this->escape($session_period) ?>">
   選其他日期
 </a>

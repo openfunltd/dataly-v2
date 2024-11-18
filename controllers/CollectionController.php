@@ -103,7 +103,7 @@ class CollectionController extends MiniEngine_Controller
         }
 
         $res = LYAPI::apiQuery("/ivods?日期={$date_input}&limit=600", "查詢 IVOD, 條件: 日期: {$date_input}");
-        $this->view->date_input = $date_input;
+        $this->view->date = $date_input;
         $this->view->data = $res;
     }
 }
