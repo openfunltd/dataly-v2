@@ -39,7 +39,7 @@ foreach ($ivods as $ivod) {
     $meets[$meet_id]->ivods[] = $ivod;
 }
 $res = LyAPI::apiQuery(
-    "/legislators?屆={$term}&output_fields=委員姓名&output_fields=委員會&output_fields=照片位址&output_fields=選區名稱&output_fields=黨籍&limit=300",
+    "/legislators?屆={$term}&output_fields=委員姓名&output_fields=黨籍&limit=300",
     "查詢第 {$term} 立法委員基本資料"
 );
 $legislators = $res->legislators;
@@ -134,9 +134,17 @@ $party_icon_urls = PartyHelper::$icon_urls;
             ?>
               <tr>
                 <td class="text-center align-middle">
-                  <?= $this->escape($ivod_legislator_name) ?>
                   <?php if (array_key_exists($party, $party_icon_urls)) { ?>
+                    <span
+                      class="wiki-tooltip"
+                      term="<?= $this->escape($term) ?>"
+                      legislator-name="<?= $this->escape($ivod_legislator_name) ?>"
+                    >
+                      <a class="no-link"><?= $this->escape($ivod_legislator_name) ?></a>
+                    </span>
                     <img class="party-icon" src="<?= $this->escape($party_icon_urls[$party]) ?>" alt="<?= $this->escape($party) ?>">
+                  <?php } else { ?>
+                    <span><?= $this->escape($ivod_legislator_name) ?></span>
                   <?php } ?>
                 </td>
                 <td class="text-center align-middle"><?= $this->escape($ivod->委員發言時間 ?? '-') ?></td>
@@ -172,3 +180,4 @@ $party_icon_urls = PartyHelper::$icon_urls;
     </div>
   </div>
 <?php } ?>
+<?= $this->partial('partial/tooltip');

@@ -1,0 +1,45 @@
+.tooltip-container {
+  width: 425px;
+  min-height: 200px;
+  height: auto;
+  padding: 15px;
+  font-size: 25px;
+  background: white;
+  box-shadow: 0 30px 90px -20px rgba(0,0,0,0.3);
+  position: absolute;
+  z-index: 100;
+  display: none;
+  opacity: 0;
+}
+
+.fade-in {
+  display: block;
+  animation: fade 0.2s linear forwards;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+a.no-link {
+    cursor: default;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 0.25rem;
+}
+
+hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tooltip-name {
+    font-size: 20px;
+}
