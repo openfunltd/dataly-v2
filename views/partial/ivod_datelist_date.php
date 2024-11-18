@@ -138,7 +138,7 @@ $party_icon_urls = PartyHelper::$icon_urls;
                     <span
                       class="wiki-tooltip"
                       term="<?= $this->escape($term) ?>"
-                      legislator-name="<?= $this->escape($ivod_legislator_name) ?>"
+                      legislator-name="<?= $this->escape(str_replace(' ', '‧', $ivod_legislator_name)) ?>"
                     >
                       <a class="no-link"><?= $this->escape($ivod_legislator_name) ?></a>
                     </span>
