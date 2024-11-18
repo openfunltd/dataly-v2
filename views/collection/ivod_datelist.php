@@ -4,15 +4,10 @@ $session_period_selected = $this->session_period_selected;
 $term_options = $this->term_options;
 $session_period_options = $this->session_period_options;
 
-foreach ($session_period_options as $option) {
-    $session_period = $option->會期;
-    $res = LYAPI::apiQuery("/ivods?屆={$term_selected}&會期={$session_period}&agg=日期&limit=0",
-        "查詢第 {$term_selected} 屆第 {$session_period} 會期 IVOD 數量，依日期分群");
-    $option->date_count = count($res->aggs[0]->buckets);
-    if ($session_period == $session_period_selected) {
-        $date_list = $res->aggs[0]->buckets;
-    }
-}
+$res = LYAPI::apiQuery("/ivods?屆={$term_selected}&會期={$session_period_selected}&agg=日期&limit=0",
+    "查詢第 {$term_selected} 屆第 {$session_period_selected} 會期 IVOD 數量，依日期分群");
+$date_list = $res->aggs[0]->buckets;
+
 foreach ($date_list as $row) {
     $row->日期 = substr($row->日期, 0, 10);
     $row->星期 = $week_data[date('w', strtotime($row->日期))];
