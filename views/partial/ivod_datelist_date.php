@@ -1,5 +1,6 @@
 <?php
 $date_input = $this->_data['date_input'] ?? date('Y-m-d');
+$date_input = ($date_input == 'latest') ? date('Y-m-d') : $date_input;
 $res = LYAPI::apiQuery("/ivods?日期={$date_input}&limit=600", "查詢 IVOD, 條件: 日期: {$date_input}");
 $ivod_count = $res->total ?? 0;
 ?>
