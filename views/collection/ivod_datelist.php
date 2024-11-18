@@ -116,13 +116,13 @@ usort($date_list, function ($rowA, $rowB) {
   window.onload = function(){
     $('input[type="radio"][name="term"]').on('change', function() {
         const term = $(this).val();
-        const nextUrl = `/collection/list/ivod?屆=${term}`;
+        const nextUrl = `/collection/list/ivod/datelist?屆=${term}`;
         window.location.replace(nextUrl);
     });
     $('input[type="radio"][name="session_period"]').on('change', function() {
         const term = $('input[name="term"]:checked').val();
         const sessionPeriod = $(this).val();
-        const nextUrl = `/collection/list/ivod?屆=${term}&會期=${sessionPeriod}`;
+        const nextUrl = `/collection/list/ivod/datelist?屆=${term}&會期=${sessionPeriod}`;
         window.location.replace(nextUrl);
     });
   }
