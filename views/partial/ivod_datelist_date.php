@@ -38,7 +38,19 @@ foreach ($ivods as $ivod) {
     }
     $meets[$meet_id]->ivods[] = $ivod;
 }
+$res = LyAPI::apiQuery(
+    "/legislators?屆={$term}&output_fields=委員姓名&output_fields=委員會&output_fields=照片位址&output_fields=選區名稱&output_fields=黨籍&limit=300",
+    "查詢第 {$term} 立法委員基本資料"
+);
+$legislators = $res->legislators;
+$party_icon_urls = PartyHelper::$icon_urls;
 ?>
+<style>
+.party-icon {
+    width: 20px;
+    margin: 0 3px 3px 3px;
+}
+</style>
 <h2 class="ml-2 mt-3 h3">IVOD 列表 :: <?= $this->escape($date_input) ?></h2>
 <a class="my-0 btn btn-primary" href="/collection/list/ivod/datelist?屆=<?= $this->escape($term) ?>&會期=<?= $this->escape($session_period) ?>">
   選其他日期
@@ -112,9 +124,21 @@ foreach ($ivods as $ivod) {
                 return $ivodA->開始時間 <=> $ivodB->開始時間;
             });
             ?>
-            <?php foreach ($meet->ivods as $ivod) { ?>
+            <?php
+            foreach ($meet->ivods as $ivod) {
+                $ivod_legislator_name = $ivod->委員名稱 ?? '-';
+                $legislator_info = array_values(array_filter($legislators, function($legislator) use ($ivod_legislator_name) {
+                   return preg_replace('/[\s‧]+/', '', $ivod_legislator_name) == preg_replace('/[\s‧]+/', '', $legislator->委員姓名);
+                }))[0] ?? new stdClass();
+                $party = $legislator_info->黨籍 ?? '-';
+            ?>
               <tr>
-                <td class="text-center align-middle"><?= $this->escape($ivod->委員名稱 ?? '-') ?></td>
+                <td class="text-center align-middle">
+                  <?= $this->escape($ivod_legislator_name) ?>
+                  <?php if (array_key_exists($party, $party_icon_urls)) { ?>
+                    <img class="party-icon" src="<?= $this->escape($party_icon_urls[$party]) ?>" alt="<?= $this->escape($party) ?>">
+                  <?php } ?>
+                </td>
                 <td class="text-center align-middle"><?= $this->escape($ivod->委員發言時間 ?? '-') ?></td>
                 <td class="text-center align-middle">
                   <?= $this->escape(gmdate('H:i:s', $ivod->影片長度) ?? '-') ?>
