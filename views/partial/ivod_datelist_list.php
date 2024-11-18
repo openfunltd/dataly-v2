@@ -82,6 +82,7 @@ usort($date_list, function ($rowA, $rowB) {
                       class="form-check-input"
                       type="radio" name="term"
                       id="term-<?= $this->escape($term) ?>"
+                      value="<?= $this->escape($term) ?>"
                       <?= ($term == $term_selected) ? 'checked' : '' ?>
                     >
                     <label class="form-check-label" for="term-<?= $this->escape($term) ?>">
@@ -105,6 +106,7 @@ usort($date_list, function ($rowA, $rowB) {
                       type="radio"
                       name="session_period"
                       id="session_period-<?= $this->escape($option->會期) ?>"
+                      value="<?= $this->escape($option->會期) ?>"
                       <?= ($option->會期 == $session_period_selected) ? 'checked' : '' ?>
                     >
                     <label class="form-check-label" for="session_period-<?= $this->escape($option->會期) ?>">
@@ -153,11 +155,16 @@ usort($date_list, function ($rowA, $rowB) {
 </div>
 <script>
   window.onload = function(){
-    if ($("#ivod-date-table").length) {
-      const table = $('#ivod-date-table').DataTable({
-        order: [],
-        fixedHeader: true,
-      });
-    }
+    $('input[type="radio"][name="term"]').on('change', function() {
+        const term = $(this).val();
+        const nextUrl = `/collection/list/ivod?屆=${term}`;
+        window.location.replace(nextUrl);
+    });
+    $('input[type="radio"][name="session_period"]').on('change', function() {
+        const term = $('input[name="term"]:checked').val();
+        const sessionPeriod = $(this).val();
+        const nextUrl = `/collection/list/ivod?屆=${term}&會期=${sessionPeriod}`;
+        window.location.replace(nextUrl);
+    });
   }
 </script>
