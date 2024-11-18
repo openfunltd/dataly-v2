@@ -13,6 +13,10 @@ class CollectionController extends MiniEngine_Controller
         if (!array_key_exists($tab, $this->view->features)) {
             throw new Exception('Invalid tab: ' . $tab);
         }
+
+        if (method_exists($this, "list_{$type}_{$tab}")) {
+            $this->{"list_{$type}_{$tab}"}();
+        }
     }
 
     public function itemAction($type, $id, $tab = null)
@@ -28,5 +32,13 @@ class CollectionController extends MiniEngine_Controller
         if (!array_key_exists($tab, $this->view->features)) {
             throw new Exception('Invalid tab: ' . $tab);
         }
+
+        if (method_exists($this, "item_{$type}_{$tab}")) {
+            $this->{"item_{$type}_{$tab}"}();
+        }
+    }
+
+    public function list_ivod_datelist()
+    {
     }
 }
