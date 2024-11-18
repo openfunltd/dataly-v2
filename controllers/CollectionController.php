@@ -47,7 +47,7 @@ class CollectionController extends MiniEngine_Controller
 
         $res = LYAPI::apiQuery(
             '/ivods?&limit=30&output_fields=會議資料.屆&output_fields=會議資料.會期&agg=屆',
-            '查詢最新的屆期/會期'
+            '查詢所有的屆期選項'
         );
         $ivods = array_filter($res->ivods, function($ivod) {
             $meet_data = $ivod->會議資料;
