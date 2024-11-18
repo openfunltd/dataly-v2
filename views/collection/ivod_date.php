@@ -152,7 +152,7 @@ $party_icon_urls = PartyHelper::$icon_urls;
                   <?= $this->escape(gmdate('H:i:s', $ivod->影片長度) ?? '-') ?>
                 </td>
                 <td class="text-center align-middle">
-                  <?php if (in_array('ai-transcript', $ivod->支援功能)) { ?>
+                  <?php if (in_array('ai-transcript', $ivod->支援功能 ?? [])) { ?>
                     <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>/ai-transcript">
                       AI 逐字稿
                     </a>
@@ -160,7 +160,7 @@ $party_icon_urls = PartyHelper::$icon_urls;
                     AI 逐字稿
                   <?php } ?>
                   |
-                  <?php if (in_array('gazette', $ivod->支援功能)) { ?>
+                  <?php if (in_array('gazette', $ivod->支援功能 ?? [])) { ?>
                     <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>/gazette">
                       公報逐字稿
                   <?php } else { ?>
