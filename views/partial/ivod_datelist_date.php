@@ -91,8 +91,27 @@ foreach ($ivods as $ivod) {
                   <td class="text-center align-middle">
                     <?= $this->escape(gmdate('H:i:s', $ivod->影片長度) ?? '-') ?>
                   </td>
-                  <td class="text-center align-middle">AI 逐字稿 | 公報逐字稿</td>
-                  <td class="text-center align-middle">立法院 IVOD 系統</td>
+                  <td class="text-center align-middle">
+                    <?php if (in_array('ai-transcript', $ivod->支援功能)) { ?>
+                      <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>/ai-transcript">
+                        AI 逐字稿
+                      </a>
+                    <?php } else { ?>
+                      AI 逐字稿
+                    <?php } ?>
+                    |
+                    <?php if (in_array('gazette', $ivod->支援功能)) { ?>
+                      <a href="/collection/item/ivod/<?= $this->escape($ivod->IVOD_ID) ?>/gazette">
+                        公報逐字稿
+                    <?php } else { ?>
+                      公報逐字稿
+                    <?php } ?>
+                  </td>
+                  <td class="text-center align-middle">
+                    <a href="<?= $this->escape($ivod->IVOD_URL) ?>">
+                      立法院 IVOD 系統
+                    </a>
+                  </td>
                 </tr>
               <?php } ?>
             </tbody>
