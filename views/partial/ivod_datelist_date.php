@@ -108,7 +108,7 @@ foreach ($ivods as $ivod) {
                     <?php } ?>
                   </td>
                   <td class="text-center align-middle">
-                    <a href="<?= $this->escape($ivod->IVOD_URL) ?>">
+                    <a href="<?= $this->escape($ivod->IVOD_URL) ?>" target="_blank">
                       立法院 IVOD 系統
                     </a>
                   </td>
