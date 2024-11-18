@@ -1,8 +1,7 @@
 <?php
-$date_input = $this->_data['date_input'] ?? date('Y-m-d');
-$date_input = ($date_input == 'latest') ? date('Y-m-d') : $date_input;
-$res = LYAPI::apiQuery("/ivods?日期={$date_input}&limit=600", "查詢 IVOD, 條件: 日期: {$date_input}");
-$ivod_count = $res->total ?? 0;
+$date_input = $this->date_input;
+$data = $this->data;
+$ivod_count = $data->total ?? 0;
 ?>
 <?php if ($ivod_count === 0) { ?>
   <div class="mt-3 card border-left-danger">
@@ -12,7 +11,7 @@ $ivod_count = $res->total ?? 0;
   </div>
 <?php return; } ?>
 <?php
-$ivods = $res->ivods;
+$ivods = $data->ivods;
 $ivods = array_reverse($ivods);
 $term = max(array_map(fn($ivod) => $ivod->會議資料->屆 ?? -1, $ivods));
 $session_period = max(array_map(fn($ivod) => $ivod->會議資料->會期 ?? -1, $ivods));

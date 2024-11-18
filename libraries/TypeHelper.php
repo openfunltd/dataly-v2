@@ -99,7 +99,8 @@ class TypeHelper
                     '影片種類',
                 ],
                 'collection_features' => [
-                    'datelist' => '每日列表',
+                    'date' => '每日列表',
+                    'datelist' => '日期選單',
                     'table' => '列表',
                 ],
                 'item_features' => [
