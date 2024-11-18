@@ -31,6 +31,7 @@ foreach ($ivods as $ivod) {
         $subjects = MeetSubjectHelper::getSubjects($meets[$meet_id]->reason) ?? $meets[$meet_id]->reason;
         $subjects_digested = MeetSubjectHelper::digestSubjects($subjects);
         $related_laws = MeetSubjectHelper::getLaws($subjects);
+        $related_laws = MeetSubjectHelper::getRelatedLawsWithId($related_laws);
         $meets[$meet_id]->compacted_reasons = $subjects_digested;
         $meets[$meet_id]->related_laws = $related_laws;
         $meets[$meet_id]->ivods = [];
@@ -67,8 +68,15 @@ foreach ($ivods as $ivod) {
                 <?php } ?>
               </td>
               <td style="width: 14%;">
-                <?php foreach ($meet->related_laws as $law_name) { ?>
-                  <p class="m-0"><?= $this->escape($law_name ?? '') ?></p>
+                <?php foreach ($meet->related_laws as $law_obj) { ?>
+                  <p class="m-0">
+                    <?= $this->escape($law_obj->law_name) ?>
+                    <?php if (isset($law_obj->law_id)) { ?>
+                      <a href="/collection/item/law/<?= $this->escape($law_obj->law_id) ?>">
+                        <i class="fas fa-fw fa-eye"></i>
+                      </a>
+                    <?php }?>
+                  </p>
                 <?php } ?>
               </td>
             </tr>

@@ -103,6 +103,23 @@ class MeetSubjectHelper
         return $laws;
     }
 
+    public static function getRelatedLawsWithId($related_laws)
+    {
+        foreach ($related_laws as &$law) {
+            $law_name = $law;
+            $res = LyAPI::apiQuery("/laws?q=$law_name", "查詢 law_id {$law_name}");
+            $law_id = null;
+            if (count($res->laws) > 0 && $res->laws[0]->名稱 == $law_name) {
+                $law_id = $res->laws[0]->法律編號;
+            }
+            $law = (object) [
+                'law_name' => $law_name,
+                'law_id' => $law_id,
+            ];
+        }
+        return $related_laws;
+    }
+
     private static function parseReason($raw) {
     $start_idx = mb_strpos($raw, "（事由：");
     $end_idx = mb_strrpos($raw, "）");
