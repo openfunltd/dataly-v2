@@ -130,6 +130,9 @@ $party_icon_urls = PartyHelper::$icon_urls;
             <?php
             foreach ($meet->ivods as $ivod) {
                 $ivod_legislator_name = $ivod->委員名稱 ?? '-';
+                if (str_contains($ivod_legislator_name, '伍麗華')) {
+                    $ivod_legislator_name = str_replace(' ', '‧', $ivod_legislator_name);
+                }
                 $legislator_info = array_values(array_filter($legislators, function($legislator) use ($ivod_legislator_name) {
                    return preg_replace('/[\s‧]+/', '', $ivod_legislator_name) == preg_replace('/[\s‧]+/', '', $legislator->委員姓名);
                 }))[0] ?? new stdClass();
@@ -141,7 +144,7 @@ $party_icon_urls = PartyHelper::$icon_urls;
                     <span
                       class="wiki-tooltip"
                       term="<?= $this->escape($term) ?>"
-                      legislator-name="<?= $this->escape(str_replace(' ', '‧', $ivod_legislator_name)) ?>"
+                      legislator-name="<?= $this->escape($ivod_legislator_name) ?>"
                     >
                       <a class="no-link"><?= $this->escape($ivod_legislator_name) ?></a>
                     </span>
