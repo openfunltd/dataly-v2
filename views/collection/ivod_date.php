@@ -9,6 +9,9 @@ $ivod_count = $data->total ?? 0;
       日期：<?= $this->escape($date) ?> 無 IVOD
     </div>
   </div>
+  <a class="mt-3 btn btn-primary" href="/collection/list/ivod/datelist">
+    選其他日期
+  </a>
 <?php return; } ?>
 <?php
 $ivods = $data->ivods;
