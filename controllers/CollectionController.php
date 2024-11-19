@@ -99,7 +99,9 @@ class CollectionController extends MiniEngine_Controller
     {
         $date_input = filter_input(INPUT_GET, '日期',FILTER_SANITIZE_STRING) ?? 'latest';
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_input)) {
-            $date_input = date('Y-m-d');
+            $res = LYAPI::apiQuery("/ivods?limit=1", "查詢最新 IVOD 日期");
+            $ivod_latest = $res->ivods[0];
+            $date_input = $ivod_latest->日期;
         }
 
         $res = LYAPI::apiQuery("/ivods?日期={$date_input}&limit=600", "查詢 IVOD, 條件: 日期: {$date_input}");
