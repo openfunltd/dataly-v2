@@ -109,8 +109,13 @@ class MeetSubjectHelper
             $law_name = $law;
             $res = LyAPI::apiQuery("/laws?q=$law_name", "查詢 law_id {$law_name}");
             $law_id = null;
-            if (count($res->laws) > 0 && $res->laws[0]->名稱 == $law_name) {
-                $law_id = $res->laws[0]->法律編號;
+            $res_laws = $res->laws ?? [];
+            foreach ($res_laws as $res_law) {
+                $res_law_name = $res_law->名稱 ?? '';
+                if ($res_law_name == $law_name) {
+                    $law_id = $res_law->法律編號;
+                    break;
+                }
             }
             $law = (object) [
                 'law_name' => $law_name,
