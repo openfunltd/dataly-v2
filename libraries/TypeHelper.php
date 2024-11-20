@@ -98,6 +98,11 @@ class TypeHelper
                     '屆',
                     '影片種類',
                 ],
+                'collection_features' => [
+                    'date' => '每日列表',
+                    'datelist' => '日期選單',
+                    'table' => '列表',
+                ],
                 'item_features' => [
                     'ai-transcript' => 'AI 逐字稿',
                     'gazette' => '公報紀錄',
