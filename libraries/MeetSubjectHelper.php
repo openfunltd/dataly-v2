@@ -107,7 +107,7 @@ class MeetSubjectHelper
     {
         foreach ($related_laws as &$law) {
             $law_name = $law;
-            $res = LyAPI::apiQuery("/laws?q=$law_name", "查詢 law_id {$law_name}");
+            $res = LyAPI::apiQuery("/laws?q=\"$law_name\"", "查詢 law_id {$law_name}");
             $law_id = null;
             $res_laws = $res->laws ?? [];
             foreach ($res_laws as $res_law) {
