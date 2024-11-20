@@ -10,4 +10,7 @@ set_include_path(
     __DIR__ . '/libraries'
     . PATH_SEPARATOR . __DIR__ . '/models'
 );
+if (!getenv('LYAPI_HOST')) {
+    putenv('LYAPI_HOST=v2.ly.govapi.tw');
+}
 MiniEngine::initEnv();
