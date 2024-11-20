@@ -40,7 +40,6 @@ class CollectionController extends MiniEngine_Controller
 
     public function list_ivod_datelist()
     {
-        $week_data = array('日', '一', '二', '三', '四', '五', '六');
         $term_selected = filter_input(INPUT_GET, '屆', FILTER_VALIDATE_INT) ?? -1;
         $session_period_selected = filter_input(INPUT_GET, '會期', FILTER_VALIDATE_INT) ?? -1;
         $date_list = [];

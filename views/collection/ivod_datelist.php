@@ -1,4 +1,5 @@
 <?php
+$week_data = array('日', '一', '二', '三', '四', '五', '六');
 $term_selected = $this->term_selected;
 $session_period_selected = $this->session_period_selected;
 $term_options = $this->term_options;
