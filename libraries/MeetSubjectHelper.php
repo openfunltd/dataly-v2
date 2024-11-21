@@ -156,7 +156,7 @@ class MeetSubjectHelper
             // 但有時會遇到「第十六條之『二、』」的「二、」被認為是索引的誤判
             // 所以特別用下列的 code 偵測誤判並跳過
             $previous_char = mb_substr($content, $current_index - 1, 1);
-            while ($current_index !== false && ! in_array($previous_char, ["\n", ' '])) {
+            while ($current_index !== false && ! in_array($previous_char, ["\n", ' ', '。'])) {
                 $current_index = mb_strpos($content, $first_order_indexes[$order + 1], $current_index + $current_idx_offset);
                 $previous_char = mb_substr($content, $current_index - 1, 1);
             }
