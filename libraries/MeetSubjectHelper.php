@@ -126,12 +126,12 @@ class MeetSubjectHelper
     }
 
     private static function parseReason($raw) {
-    $start_idx = mb_strpos($raw, "（事由：");
-    $end_idx = mb_strrpos($raw, "）");
-    $content = mb_substr($raw, $start_idx + 4, $end_idx - ($start_idx + 4));
-    $content = preg_replace('/【.*?】/', '', $content);
-    $content = trim($content);
-    return $content;
+        $start_idx = mb_strpos($raw, "（事由：");
+        $end_idx = mb_strrpos($raw, "）");
+        $content = mb_substr($raw, $start_idx + 4, $end_idx - ($start_idx + 4));
+        $content = preg_replace('/【.*?】/', '', $content);
+        $content = trim($content);
+        return $content;
     }
 
     private static function parseSubjects($content, $first_order_indexes)
