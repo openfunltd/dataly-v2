@@ -146,8 +146,8 @@ class MeetSubjectHelper
                 return null;
             }
             $last_idx_offset = mb_strlen($idx);
-            if ($order == 19) {
-                //代表有可能該會會議要處理的事項超過 19 個，目前僅支援 19 個
+            if ($order == 100) {
+                //代表有可能該會會議要處理的事項超過 100 個，目前僅支援 100 個
                 $subjects[] = trim(mb_substr($content, $last_index + $last_idx_offset));
             }
             $current_index = mb_strpos($content, $first_order_indexes[$order + 1]);
