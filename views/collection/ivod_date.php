@@ -26,12 +26,11 @@ foreach ($ivods as $ivod) {
         $meets[$meet_id]->id = $meet_id;
         if (strpos($meet_id, 'unknown') === 0) {
             $meets[$meet_id]->title = preg_replace('#（事由.*#', '', $ivod->會議名稱);
-            $meets[$meet_id]->reason = $meets[$meet_id]->title;
         } else {
             $meets[$meet_id]->title = $ivod->會議資料->標題 ?? preg_replace('#（事由.*#', '', $ivod->會議名稱);
-            $meets[$meet_id]->reason = $ivod->會議名稱;
         }
-        $subjects = MeetSubjectHelper::getSubjects($meets[$meet_id]->reason) ?? $meets[$meet_id]->reason;
+        $meets[$meet_id]->reason = $ivod->會議名稱;
+        $subjects = MeetSubjectHelper::getSubjects($meets[$meet_id]->reason);
         $subjects_digested = MeetSubjectHelper::digestSubjects($subjects);
         $related_laws = MeetSubjectHelper::getLaws($subjects);
         $related_laws = MeetSubjectHelper::getRelatedLawsWithId($related_laws);
