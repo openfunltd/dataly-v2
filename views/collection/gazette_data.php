@@ -9,9 +9,17 @@ $gazette_idx = sprintf('立法院第%d卷 第%d期 第%d冊',
     $issue_idx,
     $volume_idx,
 );
-$ppg_url = sprintf('https://ppg.ly.gov.tw/ppg/publications/official-gazettes/%d/%d/%s/details',
+$ppg_default_url = sprintf('https://ppg.ly.gov.tw/ppg/publications/official-gazettes/%d/%s/%s/details',
     $scroll_idx,
-    $issue_idx,
+    str_pad($issue_idx, 2, '0', STR_PAD_LEFT),
+    str_pad($volume_idx, 2, '0', STR_PAD_LEFT),
+);
+$pdf_url_base = 'https://ppg.ly.gov.tw/ppg/PublicationBulletinDetail/download/communique1/final/pdf';
+$gazette_pdf_default_url = sprintf($pdf_url_base . '/%d/%s/LCIDC01_%d%s%s.pdf',
+    $scroll_idx,
+    str_pad($issue_idx, 2, '0', STR_PAD_LEFT),
+    $scroll_idx,
+    str_pad($issue_idx, 2, '0', STR_PAD_LEFT),
     str_pad($volume_idx, 2, '0', STR_PAD_LEFT),
 );
 
@@ -46,8 +54,8 @@ $gazette_agendas = array_filter($gazette_agendas, function($agenda) use ($scroll
     return $agenda->卷 == $scroll_idx and $agenda->期 == $issue_idx and $agenda->冊別 == $volume_idx;
 });
 
-$ppg_url = $gazette_agendas[0]->公報網網址;
-$gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址;
+$ppg_url = $gazette_agendas[0]->公報網網址 ?? $ppg_default_url;
+$gazette_pdf_url = $gazette_agendas[0]->公報完整PDF網址 ?? $gazette_pdf_default_url;
 ?>
 <div class="card shadow mt-3 mb-3">
   <div class="card-body">
