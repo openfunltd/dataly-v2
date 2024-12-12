@@ -24,10 +24,12 @@ foreach ($ivods as $ivod) {
     if (!array_key_exists($meet_id, $meets)) {
         $meets[$meet_id] = new stdClass();
         $meets[$meet_id]->id = $meet_id;
+        $title_end_idx = mb_strpos($ivod->會議名稱, '（事由');
+        $ivod_meet_title = ($title_end_idx !== false) ? mb_substr($ivod->會議名稱, 0, $title_end_idx) : $ivod->會議名稱;
         if (strpos($meet_id, 'unknown') === 0) {
-            $meets[$meet_id]->title = preg_replace('#（事由.*#', '', $ivod->會議名稱);
+            $meets[$meet_id]->title = $ivod_meet_title;
         } else {
-            $meets[$meet_id]->title = $ivod->會議資料->標題 ?? preg_replace('#（事由.*#', '', $ivod->會議名稱);
+            $meets[$meet_id]->title = $ivod->會議資料->標題 ?? $ivod_meet_title;
         }
         $meets[$meet_id]->reason = $ivod->會議名稱;
         $subjects = MeetSubjectHelper::getSubjects($meets[$meet_id]->reason);
