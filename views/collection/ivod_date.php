@@ -55,6 +55,11 @@ $party_icon_urls = PartyHelper::$icon_urls;
     margin: 0 3px 3px 3px;
 }
 </style>
+<div class="card mt-3 border-left-danger">
+  <div class="card-body">
+    近期因歐噴採用 4090 顯卡實驗在 fine-tune 微調訓練更準確立法院辨識模型，因此會有 AI 逐字稿產製較慢的情況，請多多見諒，請期待歐噴訓練結果，之後就會有更準確更好用的 AI 逐字稿給大家使用
+  </div>
+</div>
 <h2 class="ml-2 mt-3 h3">IVOD 列表 :: <?= $this->escape($date) ?></h2>
 <a class="my-0 btn btn-primary" href="/collection/list/ivod/datelist?屆=<?= $this->escape($term) ?>&會期=<?= $this->escape($session_period) ?>">
   選其他日期
