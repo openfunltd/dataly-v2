@@ -28,6 +28,11 @@
     $subtitles = json_encode($this->data->data->transcript->whisperx);
 ?>
 <link rel="stylesheet" href="/static/css/ivod/custom_ai-transcript.css">
+<div class="card my-3 border-left-danger">
+  <div class="card-body">
+    本逐字稿內容由 AI 自動生成，可能包含錯誤、遺漏或誤譯之處。請使用者務必與原始影片音訊內容交叉比對，以確保資訊正確性。另可參考立法院日後釋出的正式公報以取得最終權威版本。
+  </div>
+</div>
 <div id="ai-transcript" class="card shadow mb-4">
     <div class="card-header py-3">
         <h1 class="h3 mb-0 text-gray-800">
