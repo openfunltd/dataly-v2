@@ -43,6 +43,14 @@ window.onload = function(){
     d_x = desiredTr.offset().top;
     $('.dataTables_scrollBody').scrollTop(scroll_pos + d_x - d_g);
   });
+
+  if (typeof startAt !== 'undefined') {
+    const segmentId = getSegmentId(startAt);
+    if (segmentId !== false) {
+      $(`#${segmentId}`).click();
+      video.currentTime = startAt;
+    }
+  }
 };
 
 function timecodeBinarySearch(subtitles, time) {
@@ -116,4 +124,15 @@ function timeStringToSeconds(timeString) {
     }
 
     return totalSeconds;
+}
+
+function getSegmentId(startAt) {
+    for (let i = 0; i < subtitles.length ;i++) {
+        const segmentStart = subtitles[i].start;
+        const segmentEnd = subtitles[i].end;
+        if (segmentStart <= startAt && startAt <= segmentEnd) {
+            return `s-${i}`;
+        }
+    }
+    return false;
 }

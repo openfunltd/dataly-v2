@@ -1,4 +1,5 @@
 <?php
+    $time = filter_input(INPUT_GET, 't', FILTER_VALIDATE_INT) ?? null;
     if (!in_array('ai-transcript', $this->data->data->支援功能)) {
         echo '無 AI 逐字稿<br>';
         return;
@@ -83,5 +84,8 @@
 </script>
 <script>
     var subtitles = <?= $subtitles ?>;
+    <?php if ($time) { ?>
+    const startAt = <?= $time ?>;
+    <?php } ?>
 </script>
 <script src="/static/js/ivod/custom_ai-transcript.js"></script>
