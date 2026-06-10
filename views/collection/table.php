@@ -235,13 +235,16 @@ $(document).ready(function() {
                 data.data = [];
                 data.recordsTotal = ret.total;
                 data.recordsFiltered = ret.total;
+                var getNestedValue = function(obj, path) {
+                    return path.split('.').reduce(function(acc, key) { return acc && acc[key]; }, obj) ?? '';
+                };
                 for (let record of records) {
                     var row = [];
                     for (let col of table_config.columns) {
                         if (record[col + ':highlight']) {
                             row.push(record[col + ':highlight'].join("\n"));
                         } else {
-                            row.push(record[col] || '');
+                            row.push(getNestedValue(record, col));
                         }
                     }
                     var id_terms = [];
