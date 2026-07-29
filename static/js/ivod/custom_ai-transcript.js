@@ -18,6 +18,20 @@ window.onload = function(){
     }
   });
 
+  $('tr[id^="s-"] td:nth-child(1)').on('click', function(event) {
+    if (window.getSelection().toString().length === 0) {
+      event.stopPropagation();
+      $('#clip-start').val($(this).text());
+    }
+  });
+
+  $('tr[id^="s-"] td:nth-child(2)').on('click', function(event) {
+    if (window.getSelection().toString().length === 0) {
+      event.stopPropagation();
+      $('#clip-end').val($(this).text());
+    }
+  });
+
   timeCache = 0;
   d_g = $('#s-0').offset().top;
   video.addEventListener("timeupdate", function(event) {
