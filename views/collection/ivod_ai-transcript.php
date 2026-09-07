@@ -1,6 +1,5 @@
 <?php
     $time = filter_input(INPUT_GET, 't', FILTER_VALIDATE_INT) ?? null;
-    $debug = filter_input(INPUT_GET, 'debug', FILTER_VALIDATE_INT) === 1;
     if (!in_array('ai-transcript', $this->data->data->支援功能)) {
         echo '無 AI 逐字稿<br>';
         return;
@@ -67,7 +66,6 @@
             </div>
             <div class="col-md-12 col-lg-6">
                 <video id="video" controls width="100%"></video>
-                <?php if ($debug): ?>
                 <div class="card mt-3">
                     <div class="card-body">
                         <h6 class="font-weight-bold">擷取片段下載</h6>
@@ -89,7 +87,6 @@
                         <div id="clip-status" class="small text-muted mt-1"></div>
                     </div>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -111,12 +108,8 @@
     <?php if ($time) { ?>
     const startAt = <?= $time ?>;
     <?php } ?>
-    <?php if ($debug): ?>
     window.IVOD_VIDEO_URL = <?= json_encode($this->escape($this->data->data->video_url)) ?>;
     window.IVOD_ID = <?= json_encode($this->escape($this->id)) ?>;
-    <?php endif; ?>
 </script>
 <script src="/static/js/ivod/custom_ai-transcript.js"></script>
-<?php if ($debug): ?>
 <script type="module" src="/static/js/ivod/clip.js"></script>
-<?php endif; ?>
