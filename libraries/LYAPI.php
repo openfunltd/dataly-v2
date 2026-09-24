@@ -22,6 +22,11 @@ class LYAPI
         }
 
         $curl = curl_init();
+        if (getenv('LYAPI_TOKEN')) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . getenv('LYAPI_TOKEN'),
+            ]);
+        }
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $res = curl_exec($curl);
