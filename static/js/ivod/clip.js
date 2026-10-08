@@ -61,6 +61,10 @@ function formatTimecode(totalSeconds) {
     return `${pad(h, 2)}:${pad(m, 2)}:${pad(sec, 2)},${pad(ms, 3)}`;
 }
 
+// 讓其他 classic script（如 custom_ai-transcript.js）可以重用同一套相對秒數
+// 與時間字串互轉邏輯，不必各自重寫一份。
+window.IvodClip = { formatTimecode, parseTimecode };
+
 async function resolveChunklistUrl(masterUrl) {
     const res = await fetch(masterUrl);
     if (!res.ok) {

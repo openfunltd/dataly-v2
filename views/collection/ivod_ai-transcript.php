@@ -6,23 +6,61 @@
     }
     $MP_name = $this->escape($this->data->data->委員名稱);
     $meet_title = $this->escape($this->data->data->會議資料->標題);
+
+    function ivod_ai_transcript_format_abs_time($epoch_seconds, $tz_offset) {
+        $local = fmod($epoch_seconds + $tz_offset, 86400);
+        if ($local < 0) {
+            $local += 86400;
+        }
+        return sprintf(
+            "%02d:%02d:%02d,%03d",
+            $local / 3600,
+            $local / 60 % 60,
+            $local % 60,
+            (1000 * $local) % 1000
+        );
+    }
+
+    // pyannote 跟 whisperx 各自獨立切分，用時間重疊最多的 pyannote 片段推斷該句的發言者。
+    // 兩邊都已依時間遞增排序，用單調指標往前掃描即可，不需要每句都整個 pyannote 重找一次。
+    function ivod_ai_transcript_best_speaker($pyannote, &$p_floor, $p_count, $w_start, $w_end) {
+        while ($p_floor < $p_count && $pyannote[$p_floor]->end < $w_start) {
+            $p_floor++;
+        }
+        $best = null;
+        $best_overlap = 0;
+        $i = $p_floor;
+        while ($i < $p_count && $pyannote[$i]->start < $w_end) {
+            $overlap = min($w_end, $pyannote[$i]->end) - max($w_start, $pyannote[$i]->start);
+            if ($overlap > $best_overlap) {
+                $best_overlap = $overlap;
+                $best = $pyannote[$i];
+            }
+            $i++;
+        }
+        return $best;
+    }
+
+    $video_start_dt = new DateTime($this->data->data->開始時間);
+    $video_start_epoch = (float) $video_start_dt->format('U.u');
+    $tz_offset = $video_start_dt->getOffset();
+
+    $pyannote = $this->data->data->transcript->pyannote ?? [];
+    $p_count = count($pyannote);
+    $p_floor = 0;
+
     $ai_transcript = [];
     foreach ($this->data->data->transcript->whisperx as $idx => $segment) {
         $content = new stdClass();
-        $start = sprintf(
-            "%02d:%02d:%02d,%03d",
-            $segment->start / 3600,
-            $segment->start / 60 % 60,
-            $segment->start % 60, (1000 * $segment->start) % 1000
-        );
-        $end = sprintf(
-            "%02d:%02d:%02d,%03d",
-            $segment->end / 3600,
-            $segment->end / 60 % 60,
-            $segment->end % 60, (1000 * $segment->end) % 1000
-        );
-        $content->start = $start;
-        $content->end = $end;
+        $content->time = ivod_ai_transcript_format_abs_time($video_start_epoch + $segment->start, $tz_offset);
+        $speaker_seg = ivod_ai_transcript_best_speaker($pyannote, $p_floor, $p_count, $segment->start, $segment->end);
+        if ($speaker_seg) {
+            $content->speaker = $this->escape($speaker_seg->speaker_name ?? $speaker_seg->speaker);
+            $content->speaker_score = isset($speaker_seg->speaker_score) ? round($speaker_seg->speaker_score * 100) : null;
+        } else {
+            $content->speaker = '—';
+            $content->speaker_score = null;
+        }
         $content->text = $this->escape($segment->text);
         $ai_transcript[] = $content;
     }
@@ -47,16 +85,21 @@
                     <table id="subtitleTable" class="table table-hover table-sm">
                         <thead>
                             <tr>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Text</th>
+                                <th>時間</th>
+                                <th>發言者</th>
+                                <th>發言內容</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($ai_transcript as $idx => $segment): ?>
                                 <tr id="s-<?= $idx ?>">
-                                    <td><?= $segment->start ?></td>
-                                    <td><?= $segment->end ?></td>
+                                    <td><?= $segment->time ?></td>
+                                    <td>
+                                        <?= $segment->speaker ?>
+                                        <?php if ($segment->speaker_score !== null): ?>
+                                            <span class="text-muted small" title="AI 判別發言者的信心度">(<?= $segment->speaker_score ?>%)</span>
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?= $segment->text ?></td>
                                 </tr>
                             <?php endforeach; ?>

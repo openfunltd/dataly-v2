@@ -9,8 +9,8 @@ window.onload = function(){
 
   $('tr[id^="s-"]').on('click', function(event) {
     if (window.getSelection().toString().length === 0) {
-      startTime = $(this).find('td:first').text();
-      video.currentTime = timeStringToSeconds(startTime);
+      const idx = parseInt($(this).attr('id').slice(2), 10);
+      video.currentTime = subtitles[idx].start;
       video.play();
       video.focus();
     } else {
@@ -18,17 +18,21 @@ window.onload = function(){
     }
   });
 
+  // 時間欄顯示的是當天絕對時間，截取片段下載要的是影片相對秒數，
+  // 因此兩個欄位都從 subtitles（相對秒數）取值並用 clip.js 的格式化邏輯顯示。
   $('tr[id^="s-"] td:nth-child(1)').on('click', function(event) {
     if (window.getSelection().toString().length === 0) {
       event.stopPropagation();
-      $('#clip-start').val($(this).text());
+      const idx = parseInt($(this).parent().attr('id').slice(2), 10);
+      $('#clip-start').val(window.IvodClip.formatTimecode(subtitles[idx].start));
     }
   });
 
-  $('tr[id^="s-"] td:nth-child(2)').on('click', function(event) {
+  $('tr[id^="s-"] td:nth-child(3)').on('click', function(event) {
     if (window.getSelection().toString().length === 0) {
       event.stopPropagation();
-      $('#clip-end').val($(this).text());
+      const idx = parseInt($(this).parent().attr('id').slice(2), 10);
+      $('#clip-end').val(window.IvodClip.formatTimecode(subtitles[idx].end));
     }
   });
 
@@ -111,33 +115,6 @@ function compareTimeCode(data, desiredTime) {
     return 2;
   }
   return 1;
-}
-
-// H:i:s.u to s
-function timeStringToSeconds(timeString) {
-    const parts = timeString.split(/[:,]/).map(parseFloat);
-    let totalSeconds = 0;
-
-    // Convert hours to seconds
-    if (parts.length === 4) {
-        totalSeconds += parts[0] * 3600; // 1 hour = 3600 seconds
-        totalSeconds += parts[1] * 60;   // 1 minute = 60 seconds
-        totalSeconds += parts[2];         // seconds
-        totalSeconds += parts[3] / 1000;  // milliseconds
-    }
-    // Convert minutes to seconds
-    else if (parts.length === 3) {
-        totalSeconds += parts[0] * 60;   // 1 minute = 60 seconds
-        totalSeconds += parts[1];         // seconds
-        totalSeconds += parts[2] / 1000;  // milliseconds
-    }
-    // Only seconds provided
-    else if (parts.length === 2) {
-        totalSeconds += parts[0];         // seconds
-        totalSeconds += parts[1] / 1000;  // milliseconds
-    }
-
-    return totalSeconds;
 }
 
 function getSegmentId(startAt) {
