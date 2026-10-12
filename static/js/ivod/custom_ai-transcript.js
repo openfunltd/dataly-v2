@@ -20,9 +20,9 @@ window.onload = function(){
 
   // 時間欄顯示的是當天絕對時間，截取片段下載要的是影片相對秒數，
   // 因此兩個欄位都從 subtitles（相對秒數）取值並用 clip.js 的格式化邏輯顯示。
+  // 不呼叫 stopPropagation，讓點擊事件照常冒泡到上面的 row handler 跳轉影片。
   $('tr[id^="s-"] td:nth-child(1)').on('click', function(event) {
     if (window.getSelection().toString().length === 0) {
-      event.stopPropagation();
       const idx = parseInt($(this).parent().attr('id').slice(2), 10);
       $('#clip-start').val(window.IvodClip.formatTimecode(subtitles[idx].start));
     }
@@ -30,7 +30,6 @@ window.onload = function(){
 
   $('tr[id^="s-"] td:nth-child(3)').on('click', function(event) {
     if (window.getSelection().toString().length === 0) {
-      event.stopPropagation();
       const idx = parseInt($(this).parent().attr('id').slice(2), 10);
       $('#clip-end').val(window.IvodClip.formatTimecode(subtitles[idx].end));
     }
