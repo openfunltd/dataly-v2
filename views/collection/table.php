@@ -58,6 +58,7 @@ var table_config = {
     data_column: <?= json_encode(TypeHelper::getDataColumn($this->type)) ?>,
     columns: <?= json_encode(TypeHelper::getColumns($this->type)) ?>,
     filter: <?= json_encode(TypeHelper::getCurrentFilter()) ?>,
+    sortable_columns: <?= json_encode(TypeHelper::getSortableColumns($this->type)) ?>,
 };
 
 $(document).ready(function() {
@@ -85,6 +86,15 @@ $(document).ready(function() {
     data_table_config = {
         dom: '<"top"lif>rt<"bottom"ip><"clear">',
         serverSide: true,
+        // 預設不排序，只有 sortable_columns 裡的欄位可以點標題排序（API 不是每個欄位都支援 sort）
+        order: [],
+        columnDefs: table_config.columns.map(function(col, idx) {
+            return {targets: idx, orderable: table_config.sortable_columns.indexOf(col) != -1};
+        }).concat([{
+            // 最後一欄「連結」
+            targets: table_config.columns.length,
+            orderable: false,
+        }]),
         ajax: function(data, callback, settings){
             var records_api_url = <?= json_encode(TypeHelper::getApiUrl($this->type)) ?>;
             // 檢查有哪些 field 有設定 filter
@@ -118,6 +128,14 @@ $(document).ready(function() {
             api_terms.push("頁數:" + page);
             if (page != 1) {
                 page_params.push('page=' + page);
+            }
+            if (data.order && data.order.length) {
+                var sort_col = table_config.columns[data.order[0].column];
+                // API 的 sort 格式: 欄位> 由大到小、欄位< 由小到大
+                var sort_term = sort_col + (data.order[0].dir == 'asc' ? '<' : '>');
+                records_api_url += '&sort=' + encodeURIComponent(sort_term);
+                api_terms.push("排序:" + sort_term);
+                page_params.push('sort=' + encodeURIComponent(sort_term));
             }
             if (data.search.value) {
                 v = data.search.value.split(/\s+/).map(function(v){ return '"' + v + '"'; }).join(' ');
@@ -277,6 +295,12 @@ $(document).ready(function() {
             data_table_config.pageLength = parseInt(url.searchParams.get(key));
         } else if (key == 'q') {
             data_table_config.search = {search: url.searchParams.get(key)};
+        } else if (key == 'sort') {
+            var m = url.searchParams.get(key).match(/^(.*)([<>])$/);
+            var sort_idx = m ? table_config.columns.indexOf(m[1]) : -1;
+            if (sort_idx != -1 && table_config.sortable_columns.indexOf(m[1]) != -1) {
+                data_table_config.order = [[sort_idx, m[2] == '<' ? 'asc' : 'desc']];
+            }
         }
     }
 

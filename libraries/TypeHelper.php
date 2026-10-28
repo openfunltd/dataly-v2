@@ -191,6 +191,9 @@ class TypeHelper
                     '刊登日期',
                     '事由',
                 ],
+                'sortable_cols' => [
+                    '刊登日期',
+                ],
                 'default_aggs' => [
                     '屆',
                     '質詢委員',
@@ -303,6 +306,12 @@ class TypeHelper
         }
 
         return $config[$type]['default_aggs'] ?? [];
+    }
+
+    public static function getSortableColumns($type)
+    {
+        $config = self::getTypeConfig();
+        return $config[$type]['sortable_cols'] ?? [];
     }
 
     public static function getRecordList($data, $prefix = '')
